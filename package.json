@@ -1,13 +1,15 @@
 {
-  "name": "webcrawler-clone",
+  "name": "iseeu",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "IseeU - Deep People Search & Identity Verification",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node server.js"
   },
-  "keywords": [],
-  "author": "",
+  "engines": {
+    "node": ">=18"
+  },
+  "author": "GR33KMoBB.media",
   "license": "ISC",
   "dependencies": {
     "express": "^5.2.1"
