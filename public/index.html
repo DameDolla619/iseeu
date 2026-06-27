@@ -351,6 +351,8 @@ function startScan(e){
         }
     });
 
+    let directLinks=[];
+
     evtSource.addEventListener('result',e=>{
         const d=JSON.parse(e.data);
         checkedCount++;
@@ -370,9 +372,17 @@ function startScan(e){
                 foundCount++;
                 $('sv-found').textContent=foundCount;
                 $('sb-found').textContent=foundCount;
-                foundList.push({...platforms[d.id],url:d.url});
+                foundList.push({...platforms[d.id],url:d.url,avatar:d.avatar});
                 updateResults();
-            }else{
+            } else if(d.directLink && d.url){
+                st.innerHTML='<span class="st-miss" style="color:var(--orange)">→</span>';
+                row.classList.add('found');
+                row.querySelector('.plat-name').style.color='var(--orange)';
+                const link=row.querySelector('.plat-link');
+                if(link)link.innerHTML='<a href="'+esc(d.url)+'" target="_blank" style="color:var(--orange)">VERIFY &#8599;</a>';
+                directLinks.push({name:d.platform||platforms[d.id]?.name,cat:d.cat||platforms[d.id]?.cat,url:d.url,info:d.info,icon:d.icon||platforms[d.id]?.icon});
+                updateDirectLinks();
+            } else{
                 st.innerHTML='<span class="st-miss">&#10005;</span>';
             }
         }
@@ -593,6 +603,39 @@ function filterSidebar(){
         const hasVisible=[...document.querySelectorAll('.plat-row[data-cat="'+cat.replace(/"/g,'\\"')+'"]')].some(r=>r.style.display!=='none');
         h.style.display=hasVisible?'':'none';
     });
+}
+
+function updateDirectLinks(){
+    const area=$('results-area');
+    area.style.display='';$('results-empty').style.display='none';
+    const old=document.getElementById('direct-links-section');
+    if(old)old.remove();
+
+    const groups={};
+    directLinks.forEach(l=>{const c=l.cat||'Other';if(!groups[c])groups[c]=[];groups[c].push(l)});
+
+    let html='<div id="direct-links-section">';
+    html+='<div class="res-section-title" style="color:var(--orange)">🔗 VERIFY THESE ACCOUNTS — Click to check if this email is registered <span class="badge" style="background:rgba(245,158,11,.12);color:var(--orange)">'+directLinks.length+'</span></div>';
+    for(const[cat,links]of Object.entries(groups)){
+        html+='<div style="margin-bottom:.5rem;font-size:.72rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-top:.75rem">'+esc(cat)+'</div>';
+        html+='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:.4rem">';
+        for(const l of links){
+            const domain=l.icon||'';
+            const favUrl=domain?'https://www.google.com/s2/favicons?domain='+domain+'&sz=32':'';
+            html+='<a href="'+esc(l.url)+'" target="_blank" rel="noopener" style="background:var(--dark-3);border:1px solid rgba(245,158,11,.2);border-radius:var(--radius-sm);padding:.65rem;display:flex;align-items:center;gap:.5rem;text-decoration:none;color:inherit;transition:all .15s;font-size:.82rem" onmouseover="this.style.borderColor=\'var(--orange)\';this.style.transform=\'translateY(-1px)\'" onmouseout="this.style.borderColor=\'rgba(245,158,11,.2)\';this.style.transform=\'none\'">';
+            html+='<img src="'+favUrl+'" width="20" height="20" style="border-radius:4px" onerror="this.style.display=\'none\'">';
+            html+='<div style="flex:1;min-width:0"><div style="font-weight:700;font-size:.8rem">'+esc(l.name)+'</div>';
+            if(l.info)html+='<div style="font-size:.68rem;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+esc(l.info)+'</div>';
+            html+='</div>';
+            html+='<span style="font-size:.7rem;font-weight:800;color:var(--orange);white-space:nowrap">VERIFY →</span>';
+            html+='</a>';
+        }
+        html+='</div>';
+    }
+    html+='</div>';
+    area.insertAdjacentHTML('beforeend',html);
+    const sections=area.querySelectorAll('#direct-links-section');
+    if(sections.length>1)sections[0].remove();
 }
 
 function esc(s){if(!s)return'';const d=document.createElement('div');d.textContent=s;return d.innerHTML}
