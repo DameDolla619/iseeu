@@ -25,7 +25,7 @@ function httpReq(method, url, body = null, headers = {}, timeout = 4000) {
         res.on('end', () => resolve({ status: res.statusCode, body: data, headers: res.headers }));
       });
       req.on('error', () => resolve({ status: 0, body: '', headers: {} }));
-      req.on('timeout', () => { req.destroy(); resolve({ status: 0, body: '', headers: {} })); });
+      req.on('timeout', () => { req.destroy(); resolve({ status: 0, body: '', headers: {} }); });
       if (body) req.write(body);
       req.end();
     } catch { resolve({ status: 0, body: '', headers: {} }); }

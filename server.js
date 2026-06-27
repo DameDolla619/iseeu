@@ -4,9 +4,28 @@ const http = require('http');
 const crypto = require('crypto');
 const dns = require('dns');
 const path = require('path');
+const { execFile } = require('child_process');
 
 const { EMAIL_CHECKERS, checkEmail, detectEmailProvider } = require('./email-checker');
 const { BG_CHECKS, runBackgroundCheck } = require('./background-check');
+
+const PYTHON_PATH = 'C:\\Users\\Gr33k\\AppData\\Local\\Programs\\Python\\Python314\\python.exe';
+const OSINT_SCRIPT = path.join(__dirname, 'osint-runner.py');
+
+function runOSINT(type, query, topSites = 0) {
+  return new Promise((resolve) => {
+    const args = [OSINT_SCRIPT, type, query];
+    if (topSites > 0) args.push(String(topSites));
+    const proc = execFile(PYTHON_PATH, args, {
+      timeout: 300000,
+      maxBuffer: 50 * 1024 * 1024,
+      env: { ...process.env, PYTHONIOENCODING: 'utf-8' },
+    }, (err, stdout) => {
+      if (err) return resolve({ error: err.message });
+      try { resolve(JSON.parse(stdout)); } catch { resolve({ error: 'Failed to parse OSINT output' }); }
+    });
+  });
+}
 
 const app = express();
 app.use(express.json());
@@ -275,7 +294,29 @@ app.get('/api/scan', async (req, res) => {
       if (result.found) emailFound++;
     });
 
-    send('done', { found: emailFound, total: EMAIL_CHECKERS.length, time: emailResults.time });
+    // Now run Holehe (120+ sites) via Python
+    send('osint_status', { tool: 'Holehe', msg: 'Scanning 120+ sites for email registration...', status: 'running' });
+    try {
+      const holehe = await runOSINT('email', clean);
+      if (holehe.holehe_found && holehe.holehe_found.length > 0) {
+        send('osint_status', { tool: 'Holehe', msg: `Found ${holehe.holehe_found.length} accounts`, status: 'done' });
+        for (const h of holehe.holehe_found) {
+          send('osint_result', {
+            platform: h.platform, found: true, verified: true,
+            url: h.url ? `https://${h.url}` : null, cat: 'Holehe (Email OSINT)',
+            info: 'Email registered (verified by Holehe)',
+            icon: h.url || h.platform,
+          });
+          emailFound++;
+        }
+      } else {
+        send('osint_status', { tool: 'Holehe', msg: `Checked ${holehe.holehe_total || 0} sites`, status: 'done' });
+      }
+    } catch (e) {
+      send('osint_status', { tool: 'Holehe', msg: 'Holehe unavailable', status: 'error' });
+    }
+
+    send('done', { found: emailFound, total: EMAIL_CHECKERS.length + 120, time: ((Date.now() - startTime) / 1000).toFixed(1) });
     res.end();
     return;
   }
@@ -429,7 +470,38 @@ app.get('/api/scan', async (req, res) => {
     await Promise.all(promises);
   }
 
-  send('done', { found, total: PLATFORMS.length, time: ((Date.now() - startTime) / 1000).toFixed(1) });
+  // ── MAIGRET DEEP SCAN (3166 sites) ──
+  if (type === 'username' || type === 'name') {
+    send('osint_status', { tool: 'Maigret', msg: 'Deep scanning 3,166 sites (this takes 30-60 seconds)...', status: 'running' });
+    try {
+      const osintType = type === 'name' ? 'name' : 'username';
+      const maigret = await runOSINT(osintType, scanName, 0);
+      if (maigret.maigret && maigret.maigret.length > 0) {
+        const maigretFound = maigret.maigret.filter(r => r.found && !r.error);
+        send('osint_status', { tool: 'Maigret', msg: `Found ${maigretFound.length} profiles across 3,166 sites`, status: 'done' });
+        for (const m of maigretFound) {
+          // Skip platforms we already checked in our own scan
+          const alreadyChecked = PLATFORMS.some(p => p.name.toLowerCase() === m.platform.toLowerCase());
+          if (!alreadyChecked) {
+            send('osint_result', {
+              platform: m.platform, found: true, verified: true,
+              url: m.url, avatar: m.avatar, cat: m.cat || 'Maigret Deep Scan',
+              info: [m.fullname, m.location, m.followers ? `${m.followers} followers` : null].filter(Boolean).join(' · ') || null,
+              fullname: m.fullname, location: m.location, followers: m.followers,
+              icon: m.platform.toLowerCase().replace(/\s+/g, ''),
+            });
+            found++;
+          }
+        }
+      } else {
+        send('osint_status', { tool: 'Maigret', msg: maigret.error || 'Scan complete', status: 'done' });
+      }
+    } catch (e) {
+      send('osint_status', { tool: 'Maigret', msg: 'Maigret unavailable on this server', status: 'error' });
+    }
+  }
+
+  send('done', { found, total: PLATFORMS.length + 3166, time: ((Date.now() - startTime) / 1000).toFixed(1) });
   res.end();
 });
 

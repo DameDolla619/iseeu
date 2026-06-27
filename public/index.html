@@ -463,6 +463,46 @@ function startScan(e){
         section.insertAdjacentHTML('beforeend',html);
     });
 
+    // ── OSINT TOOL STATUS (Maigret/Holehe) ──
+    evtSource.addEventListener('osint_status',e=>{
+        const d=JSON.parse(e.data);
+        const area=$('results-area');
+        area.style.display='';$('results-empty').style.display='none';
+        let banner=document.getElementById('osint-banner-'+d.tool);
+        if(!banner){
+            banner=document.createElement('div');
+            banner.id='osint-banner-'+d.tool;
+            banner.style.cssText='background:linear-gradient(135deg,rgba(0,232,184,.08),rgba(59,130,246,.08));border:1px solid var(--accent);border-radius:var(--radius-sm);padding:1rem;margin-bottom:.75rem;display:flex;align-items:center;gap:.75rem';
+            area.insertAdjacentElement('afterbegin',banner);
+        }
+        const spinning=d.status==='running'?'<div style="width:18px;height:18px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;flex-shrink:0"></div>':'<span style="color:var(--accent);font-size:1.1rem">✓</span>';
+        banner.innerHTML=spinning+'<div><strong style="font-size:.85rem">'+esc(d.tool)+'</strong><div style="font-size:.78rem;color:var(--text-muted)">'+esc(d.msg)+'</div></div>';
+    });
+
+    // ── OSINT RESULTS (from Maigret/Holehe) ──
+    evtSource.addEventListener('osint_result',e=>{
+        const d=JSON.parse(e.data);
+        if(!d.found)return;
+        foundCount++;
+        $('sv-found').textContent=foundCount;
+        $('sb-found').textContent=foundCount;
+        foundList.push({name:d.platform,cat:d.cat,url:d.url,icon:d.icon,avatar:d.avatar});
+        updateResults();
+        // Add to sidebar
+        const list=$('sb-list');
+        const row=document.createElement('div');
+        row.className='plat-row found';
+        row.dataset.name=(d.platform||'').toLowerCase();
+        row.dataset.cat=(d.cat||'').toLowerCase();
+        const domain=getDomain(d.platform);
+        const favUrl=domain?'https://www.google.com/s2/favicons?domain='+domain+'&sz=32':'';
+        row.innerHTML='<div class="plat-icon">'+(favUrl?'<img src="'+favUrl+'" onerror="this.parentNode.textContent=\'?\'" width="24" height="24" style="border-radius:6px">':'?')+'</div>'
+            +'<span class="plat-name" style="color:var(--accent)">'+esc(d.platform)+'</span>'
+            +'<span class="plat-link"><a href="'+esc(d.url)+'" target="_blank">OPEN ↗</a></span>'
+            +'<span class="plat-status"><span class="st-found">✓</span></span>';
+        list.appendChild(row);
+    });
+
     evtSource.addEventListener('done',e=>{
         const d=JSON.parse(e.data);
         if(scanTimer){clearInterval(scanTimer);scanTimer=null}
