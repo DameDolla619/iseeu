@@ -417,6 +417,42 @@ function startScan(e){
         $('results-area').style.display='';$('results-empty').style.display='none';
     });
 
+    // ── BACKGROUND CHECK RESULTS ──
+    evtSource.addEventListener('bg_start',e=>{
+        const d=JSON.parse(e.data);
+        $('results-area').insertAdjacentHTML('beforeend','<div id="bg-section"><div class="res-section-title">🔍 BACKGROUND CHECK — Public Records <span class="badge">scanning...</span></div></div>');
+        $('results-area').style.display='';$('results-empty').style.display='none';
+    });
+
+    evtSource.addEventListener('bg_result',e=>{
+        const d=JSON.parse(e.data);
+        const section=$('bg-section');
+        if(!section)return;
+        let html='<div style="background:var(--dark-3);border:1px solid '+(d.found?'var(--accent)':'var(--border)')+';border-radius:var(--radius-sm);padding:1rem;margin-bottom:.5rem">';
+        html+='<div style="display:flex;align-items:center;gap:.6rem;margin-bottom:.4rem">';
+        html+='<span style="font-size:1.2rem">'+esc(d.icon)+'</span>';
+        html+='<strong style="font-size:.88rem">'+esc(d.module)+'</strong>';
+        html+='<span style="margin-left:auto;font-size:.7rem;font-weight:700;padding:.15rem .5rem;border-radius:100px;background:'+(d.found?'var(--accent-dim);color:var(--accent)':'rgba(100,116,139,.15);color:#64748b')+'">'+(d.found?(d.count?d.count+' FOUND':'FOUND'):'CLEAR')+'</span>';
+        html+='</div>';
+        if(d.info)html+='<div style="font-size:.82rem;color:var(--text-muted);margin-bottom:.4rem">'+esc(d.info)+'</div>';
+        if(d.details&&Array.isArray(d.details)){
+            html+='<div style="margin-top:.5rem">';
+            d.details.forEach(det=>{
+                html+='<div style="background:var(--dark-4);border:1px solid var(--border);border-radius:6px;padding:.6rem;margin-bottom:.35rem;font-size:.8rem">';
+                Object.entries(det).forEach(([k,v])=>{
+                    if(v&&k!=='avatar'){
+                        html+='<div style="display:flex;justify-content:space-between;padding:.15rem 0"><span style="color:var(--text-muted);text-transform:capitalize">'+esc(k)+'</span><span style="font-weight:600;font-family:\'JetBrains Mono\',monospace;font-size:.75rem;text-align:right;max-width:60%;overflow:hidden;text-overflow:ellipsis">'+esc(String(v))+'</span></div>';
+                    }
+                });
+                html+='</div>';
+            });
+            html+='</div>';
+        }
+        if(d.url)html+='<a href="'+esc(d.url)+'" target="_blank" style="font-size:.75rem;font-weight:700;color:var(--accent);display:inline-block;margin-top:.3rem">View Full Records →</a>';
+        html+='</div>';
+        section.insertAdjacentHTML('beforeend',html);
+    });
+
     evtSource.addEventListener('done',e=>{
         const d=JSON.parse(e.data);
         if(scanTimer){clearInterval(scanTimer);scanTimer=null}

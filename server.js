@@ -6,6 +6,7 @@ const dns = require('dns');
 const path = require('path');
 
 const { EMAIL_CHECKERS, checkEmail, detectEmailProvider } = require('./email-checker');
+const { BG_CHECKS, runBackgroundCheck } = require('./background-check');
 
 const app = express();
 app.use(express.json());
@@ -277,6 +278,16 @@ app.get('/api/scan', async (req, res) => {
     send('done', { found: emailFound, total: EMAIL_CHECKERS.length, time: emailResults.time });
     res.end();
     return;
+  }
+
+  // ── NAME SEARCH: Run background check modules + platform scan ──
+  if (type === 'name') {
+    // Run background check databases in parallel
+    const bgChecks = BG_CHECKS.filter(c => c.type === 'name');
+    send('bg_start', { count: bgChecks.length });
+    await runBackgroundCheck(clean, 'name', (result) => {
+      send('bg_result', result);
+    });
   }
 
   // ── NON-EMAIL SEARCHES: Use platform URL checks ──
