@@ -170,6 +170,39 @@
         .parent-company{text-align:center;padding:1rem 0 0;margin-top:.5rem;border-top:1px solid var(--border);font-size:.72rem;color:var(--text-muted);width:100%}
         .parent-company a{font-weight:800;color:#fff;letter-spacing:.5px}.parent-company a:hover{color:var(--accent)}
 
+        /* ═══════ FACE SEARCH MODAL ═══════ */
+        .face-overlay{display:none;position:fixed;inset:0;z-index:300;background:rgba(6,10,19,.88);backdrop-filter:blur(8px);align-items:flex-start;justify-content:center;overflow-y:auto;padding:3rem 1rem}
+        .face-overlay.active{display:flex}
+        .face-modal{background:var(--dark-2);border:1px solid var(--border);border-top:3px solid var(--accent);border-radius:var(--radius);width:100%;max-width:680px;padding:1.75rem;box-shadow:0 24px 80px rgba(0,0,0,.6)}
+        .face-modal h2{font-size:1.3rem;font-weight:900;display:flex;align-items:center;gap:.5rem;margin-bottom:.3rem}
+        .face-modal .fm-sub{font-size:.85rem;color:var(--text-muted);margin-bottom:1.25rem}
+        .face-modal .fm-close{float:right;background:none;border:1px solid var(--border);color:var(--text-muted);width:30px;height:30px;border-radius:8px;cursor:pointer;font-size:1rem;font-family:inherit}
+        .face-modal .fm-close:hover{color:#fff;border-color:var(--accent)}
+        .fm-drop{border:2px dashed var(--border);border-radius:var(--radius-sm);padding:1.75rem 1rem;text-align:center;cursor:pointer;transition:all .15s;background:var(--dark-3);margin-bottom:.75rem}
+        .fm-drop:hover,.fm-drop.drag{border-color:var(--accent);background:var(--accent-dim)}
+        .fm-drop .fd-icon{font-size:2rem;margin-bottom:.4rem}
+        .fm-drop .fd-main{font-weight:700;font-size:.9rem}
+        .fm-drop .fd-sub{font-size:.74rem;color:var(--text-muted);margin-top:.2rem}
+        .fm-or{text-align:center;font-size:.7rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:2px;margin:.5rem 0}
+        .fm-url-row{display:flex;gap:.5rem;margin-bottom:1.25rem}
+        .fm-url-row input{flex:1;background:var(--dark-3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:.6rem .8rem;color:#fff;font-family:inherit;font-size:.85rem;outline:none}
+        .fm-url-row input:focus{border-color:var(--accent)}
+        .fm-preview{display:none;margin-bottom:1.25rem;text-align:center}
+        .fm-preview.show{display:block}
+        .fm-preview img{max-height:180px;max-width:100%;border-radius:var(--radius-sm);border:2px solid var(--accent)}
+        .fm-preview .fp-clear{display:block;margin:.5rem auto 0;background:none;border:none;color:var(--red);font-size:.74rem;font-weight:700;cursor:pointer;font-family:inherit}
+        .fm-engines-title{font-size:.74rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin-bottom:.6rem}
+        .fm-engines{display:grid;grid-template-columns:1fr 1fr;gap:.5rem}
+        .fm-engine{display:flex;align-items:center;gap:.6rem;background:var(--dark-3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:.7rem .85rem;cursor:pointer;transition:all .15s;text-align:left;font-family:inherit;color:inherit}
+        .fm-engine:hover:not(:disabled){border-color:var(--accent);transform:translateY(-1px)}
+        .fm-engine:disabled{opacity:.4;cursor:not-allowed}
+        .fm-engine .fe-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:.95rem;flex-shrink:0}
+        .fm-engine .fe-name{font-weight:700;font-size:.84rem}
+        .fm-engine .fe-tag{font-size:.66rem;color:var(--text-muted)}
+        .fm-engine .fe-tag.best{color:var(--accent);font-weight:700}
+        .fm-note{font-size:.72rem;color:var(--text-muted);margin-top:1rem;line-height:1.6;background:var(--dark-3);border-left:2px solid var(--orange);padding:.6rem .8rem;border-radius:0 6px 6px 0}
+        @keyframes spin{to{transform:rotate(360deg)}}
+
         @media(max-width:900px){
             .scan-sidebar{width:260px;min-width:260px}
             .footer__inner{grid-template-columns:1fr 1fr}
@@ -211,6 +244,7 @@
             <button data-type="username" data-ph="Enter username..." onclick="switchTab(this)">&#128101; Username</button>
             <button data-type="address" data-ph="Enter street address..." onclick="switchTab(this)">&#127968; Address</button>
             <button data-type="image" data-ph="Paste image URL..." onclick="switchTab(this)">&#128247; Image</button>
+            <button data-type="face" data-ph="Reverse face search..." onclick="switchTab(this)">&#129502; Face Search</button>
         </div>
         <div class="search-body">
             <form class="search-row" onsubmit="startScan(event)">
@@ -257,6 +291,39 @@
                 <p>Results will appear here as platforms are checked.</p>
             </div>
             <div id="results-area" style="display:none"></div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══ FACE SEARCH MODAL ═══ -->
+<div class="face-overlay" id="face-overlay">
+    <div class="face-modal">
+        <button class="fm-close" onclick="closeFace()">&times;</button>
+        <h2>&#129502; Reverse Face Search</h2>
+        <div class="fm-sub">Add a photo, then launch it across the web's face-search engines. Best for finding where <strong>your own</strong> face appears online.</div>
+
+        <div class="fm-drop" id="fm-drop" onclick="$('fm-file').click()">
+            <div class="fd-icon">&#128247;</div>
+            <div class="fd-main">Drop a photo here or click to upload</div>
+            <div class="fd-sub">JPG or PNG &middot; a clear, front-facing face works best</div>
+        </div>
+        <input type="file" id="fm-file" accept="image/*" style="display:none" onchange="onFaceFile(this.files[0])">
+
+        <div class="fm-or">— or —</div>
+        <div class="fm-url-row">
+            <input type="text" id="fm-url" placeholder="Paste a public image URL (https://...)" oninput="onFaceUrl(this.value)">
+        </div>
+
+        <div class="fm-preview" id="fm-preview">
+            <img id="fm-preview-img" alt="preview">
+            <button class="fp-clear" onclick="clearFace()">&times; Remove photo</button>
+        </div>
+
+        <div class="fm-engines-title">Launch search on</div>
+        <div class="fm-engines" id="fm-engines"></div>
+
+        <div class="fm-note" id="fm-note">
+            Add a photo above to enable the engines. <strong>PimEyes</strong> and <strong>FaceCheck.ID</strong> open their upload page (drag your photo in — if you uploaded a file we copy it to your clipboard so you can paste it). <strong>Yandex</strong>, <strong>Google Lens</strong> and <strong>TinEye</strong> need a public image URL to search directly.
         </div>
     </div>
 </div>
@@ -308,6 +375,8 @@ function getFavicon(name,url){
 
 function startScan(e){
     e.preventDefault();
+    // Face Search uses a handoff modal, not the SSE scan
+    if(currentType==='face'){openFace();return}
     const query=$('q').value.trim();
     if(!query)return $('q').focus();
 
@@ -677,6 +746,82 @@ function updateDirectLinks(){
     const sections=area.querySelectorAll('#direct-links-section');
     if(sections.length>1)sections[0].remove();
 }
+
+/* ═══════ FACE SEARCH (handoff) ═══════ */
+// Face-search engines. needsUrl = can search directly with an image URL.
+// upload = opens its own upload page (user drags photo / pastes from clipboard).
+const FACE_ENGINES=[
+    {name:'PimEyes',tag:'Most thorough',best:true,emoji:'&#128064;',bg:'#1e3a8a',upload:'https://pimeyes.com/en'},
+    {name:'FaceCheck.ID',tag:'Indexes adult sites',best:true,emoji:'&#129302;',bg:'#7c3aed',upload:'https://facecheck.id/'},
+    {name:'Lenso.ai',tag:'AI face & image',emoji:'&#10024;',bg:'#0891b2',upload:'https://lenso.ai/en'},
+    {name:'Yandex',tag:'Needs image URL',emoji:'&#127760;',bg:'#dc2626',needsUrl:u=>'https://yandex.com/images/search?rpt=imageview&url='+encodeURIComponent(u)},
+    {name:'Google Lens',tag:'Needs image URL',emoji:'&#128270;',bg:'#16a34a',needsUrl:u=>'https://lens.google.com/uploadbyurl?url='+encodeURIComponent(u)},
+    {name:'TinEye',tag:'Needs image URL',emoji:'&#128444;',bg:'#475569',needsUrl:u=>'https://tineye.com/search?url='+encodeURIComponent(u)},
+];
+let faceUrl='', faceBlob=null;
+
+function openFace(){buildFaceEngines();$('face-overlay').classList.add('active')}
+function closeFace(){$('face-overlay').classList.remove('active')}
+
+function onFaceFile(file){
+    if(!file)return;
+    faceBlob=file; faceUrl='';
+    $('fm-url').value='';
+    const reader=new FileReader();
+    reader.onload=ev=>{$('fm-preview-img').src=ev.target.result;$('fm-preview').classList.add('show')};
+    reader.readAsDataURL(file);
+    buildFaceEngines();
+}
+function onFaceUrl(val){
+    faceUrl=(val||'').trim(); faceBlob=null;
+    if(faceUrl){$('fm-preview-img').src=faceUrl;$('fm-preview').classList.add('show')}
+    else $('fm-preview').classList.remove('show');
+    buildFaceEngines();
+}
+function clearFace(){
+    faceUrl='';faceBlob=null;$('fm-url').value='';$('fm-file').value='';
+    $('fm-preview').classList.remove('show');buildFaceEngines();
+}
+
+function buildFaceEngines(){
+    const has=!!(faceUrl||faceBlob);
+    const hasUrl=!!faceUrl;
+    let html='';
+    FACE_ENGINES.forEach((eng,i)=>{
+        // URL-based engines need a URL; upload engines work with either input
+        const enabled=has&&(eng.needsUrl?hasUrl:true);
+        html+='<button class="fm-engine" '+(enabled?'':'disabled')+' onclick="launchFace('+i+')">';
+        html+='<span class="fe-icon" style="background:'+eng.bg+'">'+eng.emoji+'</span>';
+        html+='<span><span class="fe-name">'+eng.name+'</span><br><span class="fe-tag'+(eng.best?' best':'')+'">'+eng.tag+'</span></span>';
+        html+='</button>';
+    });
+    $('fm-engines').innerHTML=html;
+}
+
+async function launchFace(i){
+    const eng=FACE_ENGINES[i];
+    if(eng.needsUrl){
+        if(!faceUrl)return;
+        window.open(eng.needsUrl(faceUrl),'_blank','noopener');
+        return;
+    }
+    // Upload-style engine: copy the image to clipboard so the user can paste it after the page opens
+    if(faceBlob){
+        try{
+            await navigator.clipboard.write([new ClipboardItem({[faceBlob.type]:faceBlob})]);
+        }catch(err){/* clipboard image copy not supported — user can still drag the file */}
+    }
+    window.open(eng.upload,'_blank','noopener');
+}
+
+// Drag & drop onto the dropzone
+(function(){
+    const dz=document.getElementById('fm-drop');
+    if(!dz)return;
+    ['dragenter','dragover'].forEach(ev=>dz.addEventListener(ev,e=>{e.preventDefault();dz.classList.add('drag')}));
+    ['dragleave','drop'].forEach(ev=>dz.addEventListener(ev,e=>{e.preventDefault();dz.classList.remove('drag')}));
+    dz.addEventListener('drop',e=>{const f=e.dataTransfer.files[0];if(f)onFaceFile(f)});
+})();
 
 function esc(s){if(!s)return'';const d=document.createElement('div');d.textContent=s;return d.innerHTML}
 </script>
