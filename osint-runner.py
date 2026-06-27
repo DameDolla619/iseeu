@@ -9,7 +9,7 @@ def run_holehe_cli(email):
     results = []
     try:
         import subprocess, os
-        scripts_dir = r"C:\Users\Gr33k\AppData\Local\Programs\Python\Python314\Scripts"
+        scripts_dir = os.environ.get("SCRIPTS_DIR", r"C:\Users\Gr33k\AppData\Local\Programs\Python\Python314\Scripts")
         holehe_exe = os.path.join(scripts_dir, "holehe.exe")
         if not os.path.exists(holehe_exe):
             holehe_exe = os.path.join(scripts_dir, "holehe")
@@ -40,7 +40,7 @@ def run_maigret_sync(username, top_sites=0):
     results = []
     try:
         import subprocess, tempfile, os
-        scripts_dir = r"C:\Users\Gr33k\AppData\Local\Programs\Python\Python314\Scripts"
+        scripts_dir = os.environ.get("SCRIPTS_DIR", r"C:\Users\Gr33k\AppData\Local\Programs\Python\Python314\Scripts")
         maigret_exe = os.path.join(scripts_dir, "maigret.exe")
         if not os.path.exists(maigret_exe):
             maigret_exe = os.path.join(scripts_dir, "maigret")

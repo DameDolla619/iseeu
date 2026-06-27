@@ -1,0 +1,8 @@
+node_modules
+dist
+.git
+*.html
+!public/**
+index.html
+iseeU.html
+render.yaml

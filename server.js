@@ -9,7 +9,7 @@ const { execFile } = require('child_process');
 const { EMAIL_CHECKERS, checkEmail, detectEmailProvider } = require('./email-checker');
 const { BG_CHECKS, runBackgroundCheck } = require('./background-check');
 
-const PYTHON_PATH = 'C:\\Users\\Gr33k\\AppData\\Local\\Programs\\Python\\Python314\\python.exe';
+const PYTHON_PATH = process.env.PYTHON_PATH || 'C:\\Users\\Gr33k\\AppData\\Local\\Programs\\Python\\Python314\\python.exe';
 const OSINT_SCRIPT = path.join(__dirname, 'osint-runner.py');
 
 function runOSINT(type, query, topSites = 0) {
