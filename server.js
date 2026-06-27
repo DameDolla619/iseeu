@@ -31,12 +31,45 @@ const app = express();
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Run the PLATFORMS list against a username/handle, calling onHit(platform, url) for each match.
+// Used to give email searches the same full platform sweep as username/name searches.
+async function checkPlatformsForHits(scanName, onHit, alreadyDone = new Set()) {
+  const batchSize = 30;
+  for (let i = 0; i < PLATFORMS.length; i += batchSize) {
+    const batch = PLATFORMS.slice(i, i + batchSize);
+    await Promise.all(batch.map(async (p) => {
+      if (alreadyDone.has(p.name.toLowerCase())) return;
+      const url = p.url.replace(/{u}/g, encodeURIComponent(scanName));
+      try {
+        const r = await httpGet(url, 4000);
+        let hit = false;
+        if (p.check) {
+          hit = r.status === 200 && p.check(r.body);
+        } else if (r.status === 200) {
+          const body = r.body.toLowerCase();
+          if ((p.anti || []).some(a => body.includes(a.toLowerCase()))) hit = false;
+          else if (p.ind && p.ind.length) hit = p.ind.some(ind => body.includes(ind.toLowerCase()));
+          else hit = true;
+        }
+        if (hit) onHit(p, url.replace(encodeURIComponent(scanName), scanName));
+      } catch { /* ignore individual platform errors */ }
+    }));
+  }
+}
+
 // ─── HTTP GET ───
 function httpGet(url, timeout = 7000, followRedirects = true) {
   return new Promise((resolve, reject) => {
     const doReq = (reqUrl, depth = 0) => {
       if (depth > 3) return resolve({ status: 0, body: '', headers: {} });
-      const mod = reqUrl.startsWith('https') ? https : http;
+      let mod, parsedUrl;
+      try {
+        parsedUrl = new URL(reqUrl);
+        mod = parsedUrl.protocol === 'https:' ? https : http;
+      } catch {
+        // Malformed URL (e.g. a relative redirect we couldn't resolve) — give up gracefully
+        return resolve({ status: 0, body: '', headers: {} });
+      }
       const req = mod.get(reqUrl, {
         headers: {
           'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36',
@@ -46,8 +79,12 @@ function httpGet(url, timeout = 7000, followRedirects = true) {
         timeout,
       }, (res) => {
         if (followRedirects && [301,302,303,307,308].includes(res.statusCode) && res.headers.location) {
-          let loc = res.headers.location;
-          if (loc.startsWith('/')) { const u = new URL(reqUrl); loc = u.origin + loc; }
+          // Resolve the Location against the current URL — handles absolute, root-relative ("/x")
+          // and path-relative ("index.php?...") redirects without throwing.
+          let loc;
+          try { loc = new URL(res.headers.location, reqUrl).href; }
+          catch { return resolve({ status: res.statusCode, headers: res.headers, body: '' }); }
+          res.resume(); // drain the redirect response
           return doReq(loc, depth + 1);
         }
         let data = '';
@@ -316,7 +353,47 @@ app.get('/api/scan', async (req, res) => {
       send('osint_status', { tool: 'Holehe', msg: 'Holehe unavailable', status: 'error' });
     }
 
-    send('done', { found: emailFound, total: EMAIL_CHECKERS.length + 120, time: ((Date.now() - startTime) / 1000).toFixed(1) });
+    // ── FULL SCAN: also sweep the 149 platforms using the email's local-part as a handle ──
+    const handle = clean.split('@')[0];
+    const seen = new Set([...EMAIL_CHECKERS.map(c => c.name.toLowerCase())]);
+    send('osint_status', { tool: 'Platform Sweep', msg: `Checking ${PLATFORMS.length} platforms for "${handle}"...`, status: 'running' });
+    let sweepHits = 0;
+    await checkPlatformsForHits(handle, (p, url) => {
+      sweepHits++;
+      emailFound++;
+      seen.add(p.name.toLowerCase());
+      send('osint_result', {
+        platform: p.name, found: true, verified: false,
+        url, cat: p.cat, icon: p.name.toLowerCase().replace(/\s+/g, ''),
+        info: `Handle "${handle}" exists on ${p.name}`,
+      });
+    }, seen);
+    send('osint_status', { tool: 'Platform Sweep', msg: `Found ${sweepHits} matches across ${PLATFORMS.length} platforms`, status: 'done' });
+
+    // ── FULL SCAN: Maigret deep scan (3,166 sites) on the local-part ──
+    send('osint_status', { tool: 'Maigret', msg: 'Deep scanning 3,166 sites (30-60s)...', status: 'running' });
+    try {
+      const maigret = await runOSINT('username', handle, 0);
+      if (maigret.maigret && maigret.maigret.length > 0) {
+        const mFound = maigret.maigret.filter(r => r.found && !r.error && !seen.has(r.platform.toLowerCase()));
+        send('osint_status', { tool: 'Maigret', msg: `Found ${mFound.length} more profiles across 3,166 sites`, status: 'done' });
+        for (const m of mFound) {
+          emailFound++;
+          send('osint_result', {
+            platform: m.platform, found: true, verified: true,
+            url: m.url, avatar: m.avatar, cat: m.cat || 'Maigret Deep Scan',
+            info: [m.fullname, m.location, m.followers ? `${m.followers} followers` : null].filter(Boolean).join(' · ') || null,
+            icon: m.platform.toLowerCase().replace(/\s+/g, ''),
+          });
+        }
+      } else {
+        send('osint_status', { tool: 'Maigret', msg: maigret.error || 'Scan complete', status: 'done' });
+      }
+    } catch (e) {
+      send('osint_status', { tool: 'Maigret', msg: 'Maigret unavailable on this server', status: 'error' });
+    }
+
+    send('done', { found: emailFound, total: EMAIL_CHECKERS.length + 120 + PLATFORMS.length + 3166, time: ((Date.now() - startTime) / 1000).toFixed(1) });
     res.end();
     return;
   }
