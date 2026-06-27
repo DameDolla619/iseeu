@@ -15,9 +15,9 @@ COPY . .
 
 ENV PYTHON_PATH="/app/venv/bin/python3"
 ENV SCRIPTS_DIR="/app/venv/bin"
-ENV PORT=8080
+ENV PORT=7860
 ENV PYTHONIOENCODING=utf-8
 
-EXPOSE 8080
+EXPOSE 7860
 
 CMD ["node", "server.js"]
