@@ -12,7 +12,18 @@ const { BG_CHECKS, runBackgroundCheck } = require('./background-check');
 const PYTHON_PATH = process.env.PYTHON_PATH || 'C:\\Users\\Gr33k\\AppData\\Local\\Programs\\Python\\Python314\\python.exe';
 const OSINT_SCRIPT = path.join(__dirname, 'osint-runner.py');
 
+// On hosted free tiers (e.g. Render, 512MB) Maigret's 3,166-site scan blows the memory
+// limit and triggers OOM restarts. Skip the deep username/name scan there; it still runs
+// full-power locally. Holehe (email) is light enough to keep.
+const LITE_OSINT = !!(process.env.RENDER || process.env.LITE_MODE === '1');
+
 function runOSINT(type, query, topSites = 0) {
+  if (LITE_OSINT && (type === 'username' || type === 'name')) {
+    return Promise.resolve({
+      maigret: [], maigret_found: 0, maigret_total: 0,
+      error: 'Deep scan disabled on the cloud (free-tier memory limit) — runs full-power in the desktop app.',
+    });
+  }
   return new Promise((resolve) => {
     const args = [OSINT_SCRIPT, type, query];
     if (topSites > 0) args.push(String(topSites));
