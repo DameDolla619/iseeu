@@ -595,6 +595,48 @@ app.get('/api/scan', async (req, res) => {
 
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'public', 'index.html')));
 
+// ── GR33KMoBB CHAT RELAY ─────────────────────────────────────────────────────
+const fs = require('fs');
+const LEADS_FILE = path.join(__dirname, 'leads.json');
+function loadLeads() { try { return JSON.parse(fs.readFileSync(LEADS_FILE,'utf8')); } catch { return []; } }
+function saveLead(lead) {
+  const leads = loadLeads();
+  leads.unshift({ ...lead, id: Date.now(), time: new Date().toISOString() });
+  fs.writeFileSync(LEADS_FILE, JSON.stringify(leads, null, 2));
+}
+
+app.use(express.json());
+
+app.post('/chat', (req, res) => {
+  const { message, visitorInfo = {}, business = 'GR33KMoBB' } = req.body;
+  let reply = '';
+  if (!visitorInfo.name) reply = "Hey! Thanks for stopping by. What's your name?";
+  else if (!visitorInfo.need) reply = `Nice to meet you, ${visitorInfo.name}! What can we help you with today?`;
+  else if (!visitorInfo.contact) reply = `Got it! What's the best email or phone number to reach you at?`;
+  else reply = `Perfect, ${visitorInfo.name}! We've got your info and someone from our team will reach out shortly. We're excited to work with you!`;
+  res.json({ reply });
+});
+
+app.post('/lead', (req, res) => {
+  const { name, contact, need, business, messages } = req.body;
+  if (!name && !contact) return res.status(400).json({ error: 'missing data' });
+  saveLead({ name, contact, need, business, messages });
+  res.json({ ok: true });
+});
+
+app.get('/leads', (req, res) => res.json(loadLeads()));
+
+app.get('/widget.js', (req, res) => {
+  const widgetPath = path.join(__dirname, 'public', 'widget.js');
+  if (fs.existsSync(widgetPath)) {
+    res.setHeader('Content-Type', 'application/javascript');
+    res.sendFile(widgetPath);
+  } else {
+    res.status(404).send('// widget not found');
+  }
+});
+// ─────────────────────────────────────────────────────────────────────────────
+
 const PORT = process.env.PORT || 3000;
 // Lightweight health endpoint for uptime pings.
 app.get('/healthz', (req, res) => res.json({ ok: true, t: Date.now() }));
