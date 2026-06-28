@@ -596,10 +596,23 @@ app.get('/api/scan', async (req, res) => {
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'public', 'index.html')));
 
 const PORT = process.env.PORT || 3000;
+// Lightweight health endpoint for uptime pings.
+app.get('/healthz', (req, res) => res.json({ ok: true, t: Date.now() }));
+
 app.listen(PORT, () => {
   console.log(`\n  ╔══════════════════════════════════════╗`);
   console.log(`  ║   👁  IseeU Server Running            ║`);
   console.log(`  ║   http://localhost:${PORT}              ║`);
   console.log(`  ║   ${PLATFORMS.length} platforms loaded            ║`);
   console.log(`  ╚══════════════════════════════════════╝\n`);
+
+  // Keep the Render free tier from spinning down (cold starts make it look broken).
+  // Self-ping the public URL every 10 minutes to stay warm.
+  const SELF_URL = process.env.RENDER_EXTERNAL_URL;
+  if (SELF_URL) {
+    setInterval(() => {
+      https.get(SELF_URL + '/healthz', r => r.resume()).on('error', () => {});
+    }, 10 * 60 * 1000);
+    console.log(`  Keep-alive self-ping enabled -> ${SELF_URL}/healthz`);
+  }
 });
