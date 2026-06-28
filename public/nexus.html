@@ -3,447 +3,359 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>GR33KMoBB Media | Damion Roy</title>
+  <title>GR33KMoBB.media</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --green: #39ff9e;
-      --green-dim: rgba(57,255,158,0.15);
-      --green-glow: rgba(57,255,158,0.4);
-      --bg: #010308;
-      --card-bg: #07091a;
-      --border: rgba(57,255,158,0.2);
-      --text: #c8d8f0;
-      --muted: #4a5a7a;
+      --purple: #7c3aed;
+      --green:  #c8ff00;
+      --white:  #ffffff;
+      --dim:    rgba(255,255,255,0.35);
     }
 
     html { scroll-behavior: smooth; }
 
     body {
-      font-family: 'Space Grotesk', sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
+      background: #000;
+      color: #fff;
+      font-family: 'Inter', sans-serif;
       overflow-x: hidden;
-    }
-
-    /* ── GRID BG ── */
-    body::before {
-      content: '';
-      position: fixed; inset: 0; z-index: 0;
-      background-image:
-        linear-gradient(rgba(57,255,158,0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(57,255,158,0.03) 1px, transparent 1px);
-      background-size: 40px 40px;
-      pointer-events: none;
     }
 
     /* ── NAV ── */
     nav {
-      position: sticky; top: 0; z-index: 100;
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
       display: flex; align-items: center; justify-content: space-between;
-      padding: 16px 40px;
-      background: rgba(1,3,8,0.85);
-      backdrop-filter: blur(16px);
-      border-bottom: 1px solid var(--border);
+      padding: 24px 32px;
+      mix-blend-mode: normal;
     }
-    .nav-logo {
-      font-family: 'Space Mono', monospace;
-      font-size: 18px; font-weight: 700;
-      color: var(--green); letter-spacing: 0.08em;
-      text-decoration: none;
+    .nav-l {
+      font-size: 11px; font-weight: 600; letter-spacing: 0.18em;
+      color: rgba(255,255,255,0.5); text-transform: uppercase;
     }
-    .nav-links { display: flex; gap: 28px; }
-    .nav-links a {
-      color: var(--muted); font-size: 14px; font-weight: 500;
-      text-decoration: none; transition: color .2s;
+    .nav-r {
+      font-size: 11px; font-weight: 600; letter-spacing: 0.18em;
+      color: rgba(255,255,255,0.5); text-transform: uppercase;
     }
-    .nav-links a:hover { color: var(--green); }
 
     /* ── HERO ── */
     .hero {
-      position: relative; z-index: 1;
-      display: flex; flex-direction: column; align-items: center;
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
       text-align: center;
-      padding: 120px 24px 80px;
-    }
-    .hero-badge {
-      display: inline-flex; align-items: center; gap: 8px;
-      background: var(--green-dim); border: 1px solid var(--border);
-      border-radius: 100px; padding: 6px 16px;
-      font-size: 12px; font-weight: 600; color: var(--green);
-      letter-spacing: 0.12em; text-transform: uppercase;
-      margin-bottom: 32px;
-    }
-    .hero-badge .dot {
-      width: 7px; height: 7px; border-radius: 50%;
-      background: var(--green); box-shadow: 0 0 8px var(--green);
-      animation: pulse 2s infinite;
-    }
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.4; }
-    }
-    .hero h1 {
-      font-family: 'Space Mono', monospace;
-      font-size: clamp(42px, 8vw, 80px);
-      font-weight: 700; line-height: 1.05;
-      color: #fff; letter-spacing: -0.02em;
-      margin-bottom: 8px;
-    }
-    .hero h1 span { color: var(--green); }
-    .hero-sub {
-      font-size: clamp(14px, 2vw, 18px);
-      color: var(--muted); max-width: 520px;
-      line-height: 1.6; margin-bottom: 48px;
-    }
-    .hero-cta {
-      display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;
-    }
-    .btn {
-      display: inline-flex; align-items: center; gap: 8px;
-      padding: 13px 28px; border-radius: 10px;
-      font-size: 14px; font-weight: 600;
-      text-decoration: none; transition: all .2s;
-      cursor: pointer; border: none;
-    }
-    .btn-primary {
-      background: var(--green); color: #000;
-    }
-    .btn-primary:hover { background: #55ffb2; transform: translateY(-1px); box-shadow: 0 6px 24px var(--green-glow); }
-    .btn-outline {
-      background: transparent; color: var(--green);
-      border: 1px solid var(--border);
-    }
-    .btn-outline:hover { border-color: var(--green); background: var(--green-dim); }
-
-    /* ── STATS ── */
-    .stats {
-      position: relative; z-index: 1;
-      display: flex; justify-content: center; gap: 0;
-      padding: 0 24px 80px;
-    }
-    .stat {
-      flex: 1; max-width: 200px;
-      display: flex; flex-direction: column; align-items: center;
-      padding: 24px; border: 1px solid var(--border);
-      background: var(--card-bg);
-    }
-    .stat:first-child { border-radius: 12px 0 0 12px; }
-    .stat:last-child { border-radius: 0 12px 12px 0; border-left: none; }
-    .stat + .stat { border-left: none; }
-    .stat-num {
-      font-family: 'Space Mono', monospace;
-      font-size: 32px; font-weight: 700; color: var(--green);
-    }
-    .stat-label { font-size: 12px; color: var(--muted); margin-top: 4px; }
-
-    /* ── SECTION ── */
-    section {
-      position: relative; z-index: 1;
-      padding: 80px 24px;
-      max-width: 1200px; margin: 0 auto;
-    }
-    .section-tag {
-      font-family: 'Space Mono', monospace;
-      font-size: 11px; font-weight: 700;
-      color: var(--green); letter-spacing: 0.15em;
-      text-transform: uppercase; margin-bottom: 12px;
-    }
-    .section-title {
-      font-size: clamp(28px, 4vw, 42px);
-      font-weight: 700; color: #fff; margin-bottom: 48px;
-      line-height: 1.1;
+      padding: 0 24px;
+      position: relative;
     }
 
-    /* ── SITE CARDS ── */
-    .sites-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-      gap: 20px;
+    .hero-logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(100px, 18vw, 240px);
+      line-height: 0.88;
+      letter-spacing: -0.01em;
+      user-select: none;
     }
-    .site-card {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 16px; padding: 28px;
+    .logo-gr   { color: #fff; }
+    .logo-33   { color: var(--purple); }
+    .logo-mo   { color: #fff; }
+    .logo-bb   {
+      color: var(--green);
+      text-shadow: 0 0 60px rgba(200,255,0,0.5), 0 0 120px rgba(200,255,0,0.2);
+    }
+
+    .hero-tag {
+      margin-top: 28px;
+      font-size: clamp(13px, 1.6vw, 17px);
+      font-weight: 300;
+      color: rgba(255,255,255,0.45);
+      letter-spacing: 0.02em;
+      max-width: 480px;
+      line-height: 1.5;
+    }
+    .hero-tag strong { color: rgba(255,255,255,0.85); font-weight: 500; }
+
+    .scroll-hint {
+      position: absolute; bottom: 36px;
+      font-size: 9px; letter-spacing: 0.22em;
+      color: rgba(255,255,255,0.2); text-transform: uppercase;
+    }
+
+    /* ── DIVIDER ── */
+    .divider {
+      width: 100%; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+    }
+
+    /* ── PRODUCTS ── */
+    .products {
+      padding: 120px 40px;
+      max-width: 1100px; margin: 0 auto;
+    }
+    .section-label {
+      font-size: 10px; letter-spacing: 0.22em;
+      color: rgba(255,255,255,0.2); text-transform: uppercase;
+      margin-bottom: 60px;
+    }
+
+    .product-list { display: flex; flex-direction: column; }
+
+    .product-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 28px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
       text-decoration: none; color: inherit;
-      transition: all .25s;
-      display: flex; flex-direction: column; gap: 12px;
-      position: relative; overflow: hidden;
+      transition: all .2s;
+      gap: 24px;
     }
-    .site-card::before {
-      content: '';
-      position: absolute; top: 0; left: 0; right: 0;
-      height: 2px;
-      background: linear-gradient(90deg, transparent, var(--green), transparent);
-      opacity: 0; transition: opacity .25s;
+    .product-row:first-child { border-top: 1px solid rgba(255,255,255,0.06); }
+    .product-row:hover .pr-name { color: var(--green); }
+    .product-row:hover .pr-arrow { opacity: 1; transform: translateX(4px); }
+    .product-row:hover { background: rgba(255,255,255,0.02); margin: 0 -20px; padding-left: 20px; padding-right: 20px; }
+
+    .pr-left { display: flex; align-items: center; gap: 24px; flex: 1; }
+    .pr-num {
+      font-size: 11px; color: rgba(255,255,255,0.15);
+      font-variant-numeric: tabular-nums; width: 24px; flex-shrink: 0;
     }
-    .site-card:hover { border-color: rgba(57,255,158,0.4); transform: translateY(-3px); box-shadow: 0 12px 40px rgba(0,0,0,0.6); }
-    .site-card:hover::before { opacity: 1; }
-    .site-card-top { display: flex; align-items: center; justify-content: space-between; }
-    .site-icon {
-      width: 48px; height: 48px; border-radius: 12px;
-      background: var(--green-dim); border: 1px solid var(--border);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 22px;
+    .pr-name {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(28px, 4vw, 52px);
+      letter-spacing: 0.02em;
+      transition: color .2s;
     }
-    .site-status {
-      display: flex; align-items: center; gap: 6px;
-      font-size: 11px; font-weight: 600;
-      color: var(--green); background: var(--green-dim);
-      padding: 4px 10px; border-radius: 100px;
-      border: 1px solid rgba(57,255,158,0.25);
+    .pr-desc {
+      font-size: 12px; color: rgba(255,255,255,0.3);
+      font-weight: 400; margin-top: 2px;
     }
-    .site-status .sdot {
-      width: 6px; height: 6px; border-radius: 50%;
-      background: var(--green); animation: pulse 2s infinite;
+    .pr-right { display: flex; align-items: center; gap: 20px; flex-shrink: 0; }
+    .pr-status {
+      font-size: 10px; letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--green); opacity: 0.7;
     }
-    .site-name { font-size: 20px; font-weight: 700; color: #fff; }
-    .site-desc { font-size: 14px; color: var(--muted); line-height: 1.5; }
-    .site-url {
-      font-family: 'Space Mono', monospace;
-      font-size: 11px; color: var(--green);
-      opacity: 0.7;
-    }
-    .site-arrow {
-      margin-top: auto; display: flex; align-items: center; gap: 6px;
-      font-size: 13px; color: var(--green); font-weight: 600;
+    .pr-arrow {
+      font-size: 20px; color: rgba(255,255,255,0.2);
+      opacity: 0; transition: all .2s;
     }
 
     /* ── ABOUT ── */
-    .about-grid {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 60px;
-      align-items: center;
+    .about {
+      padding: 120px 40px;
+      max-width: 1100px; margin: 0 auto;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 80px;
+      align-items: start;
     }
-    @media (max-width: 768px) { .about-grid { grid-template-columns: 1fr; } }
-    .about-text p { font-size: 16px; color: var(--text); line-height: 1.7; margin-bottom: 20px; }
-    .about-text p strong { color: var(--green); }
-    .about-card {
-      background: var(--card-bg); border: 1px solid var(--border);
-      border-radius: 20px; padding: 36px;
+    @media (max-width: 700px) { .about { grid-template-columns: 1fr; gap: 48px; } }
+
+    .about-headline {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(48px, 7vw, 88px);
+      line-height: 0.92; letter-spacing: 0.01em;
+      color: #fff;
     }
-    .about-avatar {
-      width: 80px; height: 80px; border-radius: 20px;
-      background: linear-gradient(135deg, var(--green-dim), rgba(57,255,158,0.05));
-      border: 1px solid var(--border);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 36px; margin-bottom: 20px;
+    .about-headline .hl-pur { color: var(--purple); }
+    .about-headline .hl-grn { color: var(--green); }
+
+    .about-body { padding-top: 8px; }
+    .about-body p {
+      font-size: 15px; line-height: 1.75;
+      color: rgba(255,255,255,0.4);
+      margin-bottom: 20px;
     }
-    .about-name { font-size: 22px; font-weight: 700; color: #fff; margin-bottom: 4px; }
-    .about-role { font-size: 13px; color: var(--green); margin-bottom: 16px; font-weight: 600; }
-    .about-bio { font-size: 14px; color: var(--muted); line-height: 1.6; }
-    .about-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
-    .tag {
-      font-size: 11px; font-weight: 600;
-      padding: 4px 12px; border-radius: 100px;
-      background: var(--green-dim); color: var(--green);
-      border: 1px solid var(--border);
+    .about-body p strong { color: rgba(255,255,255,0.85); font-weight: 500; }
+    .about-meta {
+      margin-top: 40px;
+      font-size: 11px; letter-spacing: 0.14em;
+      color: rgba(255,255,255,0.2); text-transform: uppercase;
     }
+    .about-meta span { color: rgba(255,255,255,0.5); }
 
     /* ── CONTACT ── */
-    .contact-box {
-      background: var(--card-bg); border: 1px solid var(--border);
-      border-radius: 20px; padding: 48px;
-      text-align: center; max-width: 600px; margin: 0 auto;
+    .contact {
+      padding: 80px 40px 140px;
+      text-align: center;
     }
-    .contact-box h3 { font-size: 28px; font-weight: 700; color: #fff; margin-bottom: 12px; }
-    .contact-box p { color: var(--muted); font-size: 15px; margin-bottom: 32px; line-height: 1.6; }
+    .contact-pre {
+      font-size: 10px; letter-spacing: 0.22em;
+      color: rgba(255,255,255,0.2); text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+    .contact-headline {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(52px, 8vw, 100px);
+      line-height: 0.92; margin-bottom: 32px;
+    }
+    .contact-headline .ch-pur { color: var(--purple); }
+    .contact-sub {
+      font-size: 14px; color: rgba(255,255,255,0.3);
+      max-width: 380px; margin: 0 auto 40px; line-height: 1.6;
+    }
+    .btn-chat {
+      display: inline-block;
+      background: var(--green); color: #000;
+      font-size: 12px; font-weight: 700; letter-spacing: 0.12em;
+      text-transform: uppercase; padding: 16px 40px;
+      border: none; cursor: pointer;
+      transition: all .2s;
+    }
+    .btn-chat:hover { background: #d4ff33; transform: translateY(-2px); }
 
     /* ── FOOTER ── */
     footer {
-      position: relative; z-index: 1;
-      border-top: 1px solid var(--border);
-      padding: 32px 40px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      padding: 28px 40px;
       display: flex; align-items: center; justify-content: space-between;
-      flex-wrap: wrap; gap: 16px;
+      flex-wrap: wrap; gap: 12px;
     }
-    footer .logo {
-      font-family: 'Space Mono', monospace;
-      font-size: 15px; font-weight: 700; color: var(--green);
+    footer .f-logo {
+      font-family: 'Bebas Neue', sans-serif; font-size: 18px;
+      color: rgba(255,255,255,0.3); letter-spacing: 0.05em;
     }
-    footer .copy { font-size: 12px; color: var(--muted); }
-    footer .built { font-size: 12px; color: var(--muted); }
-    footer .built span { color: var(--green); }
-
-    @media (max-width: 640px) {
-      nav { padding: 14px 20px; }
-      .nav-links { display: none; }
-      .stats { flex-direction: column; align-items: center; }
-      .stat { border-radius: 12px !important; border: 1px solid var(--border) !important; width: 100%; max-width: 100%; }
-      footer { flex-direction: column; text-align: center; }
-    }
+    footer .f-copy { font-size: 11px; color: rgba(255,255,255,0.15); }
+    footer .f-built { font-size: 11px; color: rgba(255,255,255,0.15); }
+    footer .f-built span { color: rgba(200,255,0,0.5); }
   </style>
 </head>
 <body>
 
   <!-- NAV -->
   <nav>
-    <a class="nav-logo" href="#">GR33K<span style="color:#fff">MoBB</span></a>
-    <div class="nav-links">
-      <a href="#products">Products</a>
-      <a href="#about">About</a>
-      <a href="#contact">Contact</a>
-    </div>
+    <div class="nav-l">GR33KMoBB.media</div>
+    <div class="nav-r">Est. Autonomous</div>
   </nav>
 
   <!-- HERO -->
-  <div class="hero">
-    <div class="hero-badge"><div class="dot"></div> Now Live · AI Business Empire</div>
-    <h1>GR33K<span>MoBB</span><br>Media</h1>
-    <p class="hero-sub">AI-powered tools and services built by Damion Roy. We automate intelligence, marketing, and customer capture — so you never miss a lead.</p>
-    <div class="hero-cta">
-      <a href="#products" class="btn btn-primary">Explore Products ↓</a>
-      <a href="#contact" class="btn btn-outline">Work With Us</a>
+  <section class="hero">
+    <div class="hero-logo">
+      <span class="logo-gr">GR</span><span class="logo-33">33</span><span class="logo-mo">Mo</span><span class="logo-bb">BB</span>
     </div>
-  </div>
+    <p class="hero-tag">We don't build businesses. <strong>We build machines that build businesses.</strong></p>
+    <div class="scroll-hint">Scroll</div>
+  </section>
 
-  <!-- STATS -->
-  <div class="stats">
-    <div class="stat">
-      <div class="stat-num">5+</div>
-      <div class="stat-label">Live Products</div>
-    </div>
-    <div class="stat">
-      <div class="stat-num">24/7</div>
-      <div class="stat-label">AI Support</div>
-    </div>
-    <div class="stat">
-      <div class="stat-num">∞</div>
-      <div class="stat-label">Lead Capture</div>
-    </div>
-    <div class="stat">
-      <div class="stat-num">$0</div>
-      <div class="stat-label">Cost to Start</div>
-    </div>
-  </div>
+  <div class="divider"></div>
 
   <!-- PRODUCTS -->
-  <section id="products">
-    <div class="section-tag">// Our Products</div>
-    <div class="section-title">Everything Running. Everything Live.</div>
-    <div class="sites-grid">
+  <section class="products">
+    <div class="section-label">// Live Products</div>
+    <div class="product-list">
 
-      <a class="site-card" href="https://iseeu.onrender.com" target="_blank" rel="noopener">
-        <div class="site-card-top">
-          <div class="site-icon">👁</div>
-          <div class="site-status"><div class="sdot"></div> Live</div>
+      <a class="product-row" href="https://iseeu.onrender.com" target="_blank" rel="noopener">
+        <div class="pr-left">
+          <div class="pr-num">01</div>
+          <div>
+            <div class="pr-name">IseeU</div>
+            <div class="pr-desc">Deep People Search &amp; Identity Verification · 3,000+ platforms</div>
+          </div>
         </div>
-        <div class="site-name">IseeU OSINT</div>
-        <div class="site-desc">Deep-scan any username, email, phone, or name across 3,000+ platforms in seconds. The most powerful free people-search tool online.</div>
-        <div class="site-url">iseeu.onrender.com</div>
-        <div class="site-arrow">Visit Site →</div>
+        <div class="pr-right">
+          <div class="pr-status">Live</div>
+          <div class="pr-arrow">→</div>
+        </div>
       </a>
 
-      <a class="site-card" href="https://aiatlasfrontdesk.lovable.app" target="_blank" rel="noopener">
-        <div class="site-card-top">
-          <div class="site-icon">🤖</div>
-          <div class="site-status"><div class="sdot"></div> Live</div>
+      <a class="product-row" href="https://aiatlasfrontdesk.lovable.app" target="_blank" rel="noopener">
+        <div class="pr-left">
+          <div class="pr-num">02</div>
+          <div>
+            <div class="pr-name">AI Front Desk</div>
+            <div class="pr-desc">AI Receptionist for Local Businesses · 24/7 Inbound</div>
+          </div>
         </div>
-        <div class="site-name">AI Front Desk</div>
-        <div class="site-desc">AI-powered receptionist and lead capture for any business. Available 24/7 — never miss a call, inquiry, or potential client again.</div>
-        <div class="site-url">aiatlasfrontdesk.lovable.app</div>
-        <div class="site-arrow">Visit Site →</div>
+        <div class="pr-right">
+          <div class="pr-status">Live</div>
+          <div class="pr-arrow">→</div>
+        </div>
       </a>
 
-      <a class="site-card" href="https://thumbai-production-bd51p.lovable.app" target="_blank" rel="noopener">
-        <div class="site-card-top">
-          <div class="site-icon">🎨</div>
-          <div class="site-status"><div class="sdot"></div> Live</div>
+      <a class="product-row" href="https://thumbai-production-bd51p.lovable.app" target="_blank" rel="noopener">
+        <div class="pr-left">
+          <div class="pr-num">03</div>
+          <div>
+            <div class="pr-name">ThumbAI</div>
+            <div class="pr-desc">AI YouTube Thumbnail Generator · High-Converting Designs</div>
+          </div>
         </div>
-        <div class="site-name">ThumbAI</div>
-        <div class="site-desc">AI-generated YouTube thumbnails that stop the scroll. High-converting designs created in seconds — no designer needed.</div>
-        <div class="site-url">thumbai-production-bd51p.lovable.app</div>
-        <div class="site-arrow">Visit Site →</div>
+        <div class="pr-right">
+          <div class="pr-status">Live</div>
+          <div class="pr-arrow">→</div>
+        </div>
       </a>
 
-      <a class="site-card" href="https://gr33k-mobb-forge.lovable.app" target="_blank" rel="noopener">
-        <div class="site-card-top">
-          <div class="site-icon">⚡</div>
-          <div class="site-status"><div class="sdot"></div> Live</div>
+      <a class="product-row" href="https://warm-greetings-db.lovable.app" target="_blank" rel="noopener">
+        <div class="pr-left">
+          <div class="pr-num">04</div>
+          <div>
+            <div class="pr-name">Contact Tracker</div>
+            <div class="pr-desc">Real-Time Visitor &amp; Contact Intelligence</div>
+          </div>
         </div>
-        <div class="site-name">GR33KMoBB Nexus</div>
-        <div class="site-desc">The command center. Our main brand portal connecting all GR33KMoBB products, services, and initiatives under one roof.</div>
-        <div class="site-url">gr33k-mobb-forge.lovable.app</div>
-        <div class="site-arrow">Visit Site →</div>
+        <div class="pr-right">
+          <div class="pr-status">Live</div>
+          <div class="pr-arrow">→</div>
+        </div>
       </a>
 
-      <a class="site-card" href="https://warm-greetings-db.lovable.app" target="_blank" rel="noopener">
-        <div class="site-card-top">
-          <div class="site-icon">📊</div>
-          <div class="site-status"><div class="sdot"></div> Live</div>
+      <div class="product-row" style="cursor:default;opacity:0.3">
+        <div class="pr-left">
+          <div class="pr-num">05</div>
+          <div>
+            <div class="pr-name">More Loading</div>
+            <div class="pr-desc">New products drop continuously</div>
+          </div>
         </div>
-        <div class="site-name">Contact & Visit Tracker</div>
-        <div class="site-desc">Track every visitor, contact, and touchpoint across your business. Know exactly who's engaging and when — in real time.</div>
-        <div class="site-url">warm-greetings-db.lovable.app</div>
-        <div class="site-arrow">Visit Site →</div>
-      </a>
-
-      <div class="site-card" style="border-style: dashed; opacity: 0.5; cursor: default;">
-        <div class="site-card-top">
-          <div class="site-icon">🚀</div>
-          <div class="site-status" style="background:rgba(255,255,255,0.05); color:#4a5a7a; border-color: rgba(255,255,255,0.1);">Coming Soon</div>
+        <div class="pr-right">
+          <div class="pr-status" style="color:rgba(255,255,255,0.3)">Soon</div>
         </div>
-        <div class="site-name">More Coming</div>
-        <div class="site-desc">New AI tools drop regularly. Follow along as the GR33KMoBB empire keeps growing.</div>
-        <div class="site-url">gr33kmobb.media</div>
       </div>
 
     </div>
   </section>
+
+  <div class="divider"></div>
 
   <!-- ABOUT -->
-  <section id="about" style="background: rgba(57,255,158,0.02); border-radius: 24px; border: 1px solid var(--border);">
-    <div class="section-tag">// The Builder</div>
-    <div class="section-title">Built Different</div>
-    <div class="about-grid">
-      <div class="about-text">
-        <p>GR33KMoBB Media is an <strong>AI business empire</strong> built from the ground up by Damion Roy — solo, fast, and relentless.</p>
-        <p>Every product here was designed to make money while you sleep. <strong>Automated lead capture. AI assistants. OSINT tools.</strong> Real tech that solves real problems.</p>
-        <p>We don't wait. We <strong>build, ship, and iterate</strong> — every day, every night, no excuses.</p>
-      </div>
-      <div class="about-card">
-        <div class="about-avatar">👤</div>
-        <div class="about-name">Damion Roy</div>
-        <div class="about-role">Founder & Developer · GR33KMoBB Media</div>
-        <div class="about-bio">Building AI-powered products that generate leads, automate business, and create passive income. All of it — solo.</div>
-        <div class="about-tags">
-          <span class="tag">AI Development</span>
-          <span class="tag">Automation</span>
-          <span class="tag">OSINT</span>
-          <span class="tag">Full Stack</span>
-          <span class="tag">Lead Gen</span>
-        </div>
+  <section class="about">
+    <div class="about-headline">
+      BUILT<br><span class="hl-pur">DIFFER</span><span class="hl-grn">ENT</span>
+    </div>
+    <div class="about-body">
+      <p>GR33KMoBB Media is an <strong>AI business empire</strong> — built from scratch, deployed fast, engineered to print.</p>
+      <p>Every product automates revenue. <strong>Lead capture. AI receptionists. Deep intelligence tools.</strong> Real tech that works while you sleep.</p>
+      <p>No investors. No team. <strong>Just Damion Roy building machines that build businesses.</strong></p>
+      <div class="about-meta">
+        Founder &amp; Developer — <span>Damion Roy</span>
       </div>
     </div>
   </section>
 
+  <div class="divider"></div>
+
   <!-- CONTACT -->
-  <section id="contact">
-    <div class="contact-box">
-      <div class="section-tag" style="margin-bottom: 16px;">// Let's Talk</div>
-      <h3>Ready to Work?</h3>
-      <p>Got a project, partnership, or idea? Hit the chat button below — our AI is live 24/7 and will get your info straight to Damion.</p>
-      <button class="btn btn-primary" onclick="document.getElementById('gr33k-chat-bubble')?.click()" style="font-size:15px; padding: 15px 36px;">
-        Start a Conversation →
-      </button>
+  <section class="contact">
+    <div class="contact-pre">// Get In Touch</div>
+    <div class="contact-headline">
+      LET'S<br><span class="ch-pur">WORK</span>
     </div>
+    <p class="contact-sub">Got a project, partnership, or idea? The AI is live 24/7. Message now — Damion gets it directly.</p>
+    <button class="btn-chat" onclick="document.getElementById('gr33k-chat-bubble')?.click()">Start Conversation</button>
   </section>
 
   <!-- FOOTER -->
   <footer>
-    <div class="logo">GR33KMoBB</div>
-    <div class="copy">© 2024 GR33KMoBB Media. All rights reserved.</div>
-    <div class="built">Built by <span>Damion Roy</span> · Powered by <span>GR33KMoBB.media</span></div>
+    <div class="f-logo">GR33KMoBB</div>
+    <div class="f-copy">© 2024 GR33KMoBB Media. All rights reserved.</div>
+    <div class="f-built">Built by <span>Damion Roy</span></div>
   </footer>
 
   <!-- CHAT WIDGET -->
   <script>
     window.GR33K_RELAY_URL = 'https://iseeu.onrender.com';
     window.GR33K_BUSINESS  = 'GR33KMoBB Media';
-    window.GR33K_ACCENT    = '#39ff9e';
+    window.GR33K_ACCENT    = '#c8ff00';
   </script>
   <script src="/widget.js"></script>
 

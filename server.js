@@ -600,12 +600,50 @@ app.get('/gr33kmobb', (req, res) => res.redirect('/nexus'));
 // ── GR33KMoBB CHAT RELAY ─────────────────────────────────────────────────────
 const fs = require('fs');
 const LEADS_FILE = path.join(__dirname, 'leads.json');
-function loadLeads() { try { return JSON.parse(fs.readFileSync(LEADS_FILE,'utf8')); } catch { return []; } }
-function saveLead(lead) {
+const GIST_ID    = '76e1518856d09e06d54cc2d295945eda';
+const GH_TOKEN   = process.env.GH_TOKEN || '';
+
+// Load from local cache first, then sync from Gist on startup
+function loadLeads() {
+  try { return JSON.parse(fs.readFileSync(LEADS_FILE,'utf8')); } catch { return []; }
+}
+
+async function loadLeadsFromGist() {
+  try {
+    const r = await fetch(`https://api.github.com/gists/${GIST_ID}`, {
+      headers: { Authorization: `token ${GH_TOKEN}`, 'User-Agent': 'gr33kmobb-relay' }
+    });
+    if (!r.ok) return null;
+    const data = await r.json();
+    const content = data.files?.['leads.json']?.content;
+    if (!content) return null;
+    const leads = JSON.parse(content);
+    fs.writeFileSync(LEADS_FILE, JSON.stringify(leads, null, 2));
+    return leads;
+  } catch { return null; }
+}
+
+async function saveLeadToGist(leads) {
+  try {
+    await fetch(`https://api.github.com/gists/${GIST_ID}`, {
+      method: 'PATCH',
+      headers: { Authorization: `token ${GH_TOKEN}`, 'Content-Type': 'application/json', 'User-Agent': 'gr33kmobb-relay' },
+      body: JSON.stringify({ files: { 'leads.json': { content: JSON.stringify(leads, null, 2) } } })
+    });
+  } catch {}
+}
+
+async function saveLead(lead) {
   const leads = loadLeads();
   leads.unshift({ ...lead, id: Date.now(), time: new Date().toISOString() });
   fs.writeFileSync(LEADS_FILE, JSON.stringify(leads, null, 2));
+  await saveLeadToGist(leads);  // persist to GitHub — survives Render restarts
 }
+
+// Sync from Gist on startup so we never lose data after a restart
+loadLeadsFromGist().then(leads => {
+  if (leads) console.log(`[Relay] Synced ${leads.length} leads from Gist`);
+});
 
 app.use(express.json());
 
