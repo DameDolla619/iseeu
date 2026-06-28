@@ -594,6 +594,8 @@ app.get('/api/scan', async (req, res) => {
 });
 
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'public', 'index.html')));
+app.get('/nexus', (req, res) => res.sendFile(path.join(__dirname, 'public', 'nexus.html')));
+app.get('/gr33kmobb', (req, res) => res.redirect('/nexus'));
 
 // ── GR33KMoBB CHAT RELAY ─────────────────────────────────────────────────────
 const fs = require('fs');
