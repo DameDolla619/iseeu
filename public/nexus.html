@@ -232,40 +232,52 @@
     }
     .btn-chat:hover { background: #d4ff33; transform: translateY(-2px); }
 
-    /* ── VIDEO REEL ── */
-    .video-reel {
+    /* ── VIDEO SPOTLIGHT ── */
+    .video-spotlight {
       padding: 100px 40px;
-      max-width: 1100px; margin: 0 auto;
+      max-width: 1200px; margin: 0 auto;
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 80px; align-items: center;
     }
-    .video-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
-    }
+    .video-spotlight.flip { direction: rtl; }
+    .video-spotlight.flip > * { direction: ltr; }
     @media (max-width: 768px) {
-      .video-grid { grid-template-columns: 1fr; }
+      .video-spotlight, .video-spotlight.flip { grid-template-columns: 1fr; direction: ltr; gap: 40px; }
     }
-    .video-card {
+    .vs-video {
       position: relative; overflow: hidden;
       background: #0a0a0a;
       border: 1px solid rgba(255,255,255,0.06);
     }
-    .video-card video {
+    .vs-video video {
       width: 100%; display: block;
-      aspect-ratio: 9/16;
-      object-fit: cover;
+      aspect-ratio: 9/16; object-fit: cover;
     }
-    .video-card .vc-label {
-      position: absolute; bottom: 0; left: 0; right: 0;
-      padding: 20px 16px 16px;
-      background: linear-gradient(transparent, rgba(0,0,0,0.85));
-      font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase;
-      color: rgba(255,255,255,0.4);
+    .vs-text { }
+    .vs-label {
+      font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase;
+      color: rgba(255,255,255,0.2); margin-bottom: 16px;
     }
-    .video-card .vc-label strong {
-      display: block; font-family: 'Bebas Neue', sans-serif;
-      font-size: 20px; letter-spacing: 0.04em; color: #fff;
-      margin-bottom: 2px;
+    .vs-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(48px, 6vw, 80px);
+      line-height: 0.9; color: #fff; margin-bottom: 20px;
+    }
+    .vs-title .vs-accent { color: var(--green); }
+    .vs-desc {
+      font-size: 14px; line-height: 1.7;
+      color: rgba(255,255,255,0.35); margin-bottom: 28px;
+    }
+    .vs-cta {
+      display: inline-block;
+      font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase;
+      color: var(--green); border: 1px solid rgba(200,255,0,0.3);
+      padding: 12px 28px; text-decoration: none;
+      transition: all .2s;
+    }
+    .vs-cta:hover { background: var(--green); color: #000; }
+    .video-card {
+      position: relative; overflow: hidden;
     }
 
     /* ── FOOTER ── */
@@ -410,10 +422,40 @@
 
   <div class="divider"></div>
 
+  <!-- AD SPOTLIGHT 1 — AI Front Desk -->
+  <section class="video-spotlight video-card">
+    <div class="vs-video">
+      <video src="/videos/ad2.mp4" muted playsinline loop preload="none"></video>
+    </div>
+    <div class="vs-text">
+      <div class="vs-label">// Product Spotlight</div>
+      <div class="vs-title">AI FRONT<br><span class="vs-accent">DESK</span></div>
+      <p class="vs-desc">Your business never sleeps again. Our AI receptionist handles every call, every chat, every lead — 24/7. No missed calls. No missed money. Built for local businesses ready to scale without hiring.</p>
+      <a class="vs-cta" href="https://aiatlasfrontdesk.lovable.app" target="_blank" rel="noopener">Try the Demo →</a>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
   <!-- ABOUT -->
   <section class="about" style="display:block;padding:80px 40px;max-width:1100px;margin:0 auto;">
     <div class="about-headline">
       BUILT<br><span class="hl-pur">DIFFER</span><span class="hl-grn">ENT</span>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- AD SPOTLIGHT 2 — ThumbAI -->
+  <section class="video-spotlight flip video-card">
+    <div class="vs-video">
+      <video src="/videos/ad3.mp4" muted playsinline loop preload="none"></video>
+    </div>
+    <div class="vs-text">
+      <div class="vs-label">// Product Spotlight</div>
+      <div class="vs-title">THUMB<span class="vs-accent">AI</span></div>
+      <p class="vs-desc">The thumbnail is the sale. ThumbAI generates high-converting YouTube thumbnails using AI — no designer, no guessing, no wasted hours. Upload your concept, get a professional result that gets the click.</p>
+      <a class="vs-cta" href="https://thumbai-production-bd51p.lovable.app" target="_blank" rel="noopener">Try Free →</a>
     </div>
   </section>
 
@@ -427,31 +469,6 @@
     </div>
     <p class="contact-sub">Got a project, partnership, or idea? The AI is live 24/7. Message now — Damion gets it directly.</p>
     <button class="btn-chat" onclick="document.getElementById('gr33k-chat-bubble')?.click()">Start Conversation</button>
-  </section>
-
-  <div class="divider"></div>
-
-  <!-- VIDEO REEL -->
-  <section class="video-reel">
-    <div class="section-label">// Built by GR33KMoBB</div>
-    <div class="video-grid">
-
-      <div class="video-card">
-        <video src="/videos/ad1.mp4" muted playsinline loop preload="none"></video>
-        <div class="vc-label"><strong>IseeU</strong>Deep People Search</div>
-      </div>
-
-      <div class="video-card">
-        <video src="/videos/ad2.mp4" muted playsinline loop preload="none"></video>
-        <div class="vc-label"><strong>AI Front Desk</strong>24/7 AI Receptionist</div>
-      </div>
-
-      <div class="video-card">
-        <video src="/videos/ad3.mp4" muted playsinline loop preload="none"></video>
-        <div class="vc-label"><strong>GR33KMoBB Media</strong>Custom Apps & AI Businesses</div>
-      </div>
-
-    </div>
   </section>
 
   <div class="divider"></div>
@@ -477,7 +494,7 @@
         else { v.pause(); }
       });
     }, { threshold: 0.4 });
-    document.querySelectorAll('.video-card').forEach(c => observer.observe(c));
+    document.querySelectorAll('.video-spotlight').forEach(c => observer.observe(c));
   </script>
 
   <!-- CHAT WIDGET -->
