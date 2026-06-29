@@ -232,6 +232,42 @@
     }
     .btn-chat:hover { background: #d4ff33; transform: translateY(-2px); }
 
+    /* ── VIDEO REEL ── */
+    .video-reel {
+      padding: 100px 40px;
+      max-width: 1100px; margin: 0 auto;
+    }
+    .video-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    @media (max-width: 768px) {
+      .video-grid { grid-template-columns: 1fr; }
+    }
+    .video-card {
+      position: relative; overflow: hidden;
+      background: #0a0a0a;
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+    .video-card video {
+      width: 100%; display: block;
+      aspect-ratio: 9/16;
+      object-fit: cover;
+    }
+    .video-card .vc-label {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      padding: 20px 16px 16px;
+      background: linear-gradient(transparent, rgba(0,0,0,0.85));
+      font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase;
+      color: rgba(255,255,255,0.4);
+    }
+    .video-card .vc-label strong {
+      display: block; font-family: 'Bebas Neue', sans-serif;
+      font-size: 20px; letter-spacing: 0.04em; color: #fff;
+      margin-bottom: 2px;
+    }
+
     /* ── FOOTER ── */
     footer {
       border-top: 1px solid rgba(255,255,255,0.06);
@@ -393,15 +429,56 @@
     <button class="btn-chat" onclick="document.getElementById('gr33k-chat-bubble')?.click()">Start Conversation</button>
   </section>
 
+  <div class="divider"></div>
+
+  <!-- VIDEO REEL -->
+  <section class="video-reel">
+    <div class="section-label">// Built by GR33KMoBB</div>
+    <div class="video-grid">
+
+      <div class="video-card">
+        <video src="/videos/ad1.mp4" muted playsinline loop preload="none"></video>
+        <div class="vc-label"><strong>IseeU</strong>Deep People Search</div>
+      </div>
+
+      <div class="video-card">
+        <video src="/videos/ad2.mp4" muted playsinline loop preload="none"></video>
+        <div class="vc-label"><strong>AI Front Desk</strong>24/7 AI Receptionist</div>
+      </div>
+
+      <div class="video-card">
+        <video src="/videos/ad3.mp4" muted playsinline loop preload="none"></video>
+        <div class="vc-label"><strong>GR33KMoBB Media</strong>Custom Apps & AI Businesses</div>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
   <!-- FOOTER -->
   <footer>
     <div class="f-logo">GR33KMoBB</div>
     <div class="f-copy">© 2024 GR33KMoBB Media. All rights reserved.</div>
-    <div style="font-size:12px;color:rgba(255,255,255,0.5);text-align:right;line-height:1.5">
+    <div style="font-size:12px;color:rgba(255,255,255,0.5);text-align:right;line-height:1.6">
       <div style="color:#fff;font-weight:600;letter-spacing:0.04em">Damion Roy</div>
       <div style="font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.3)">Founder &amp; Developer</div>
+      <a href="mailto:gr33kmobb619@gmail.com" style="font-size:10px;color:rgba(200,255,0,0.5);text-decoration:none;letter-spacing:0.04em">gr33kmobb619@gmail.com</a>
     </div>
   </footer>
+
+  <!-- VIDEO AUTOPLAY ON SCROLL -->
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        const v = e.target.querySelector('video');
+        if (!v) return;
+        if (e.isIntersecting) { v.play(); }
+        else { v.pause(); }
+      });
+    }, { threshold: 0.4 });
+    document.querySelectorAll('.video-card').forEach(c => observer.observe(c));
+  </script>
 
   <!-- CHAT WIDGET -->
   <script>
