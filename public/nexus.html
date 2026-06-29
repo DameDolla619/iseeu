@@ -61,11 +61,15 @@
       user-select: none;
     }
     .logo-gr   { color: #fff; }
-    .logo-33   { color: var(--purple); }
+    .logo-33   {
+      color: var(--purple);
+      text-shadow: 0 0 40px rgba(124,58,237,0.8), 0 0 100px rgba(124,58,237,0.4), 0 0 200px rgba(124,58,237,0.2);
+    }
+    .logo-k    { color: #fff; }
     .logo-mo   { color: #fff; }
     .logo-bb   {
       color: var(--green);
-      text-shadow: 0 0 60px rgba(200,255,0,0.5), 0 0 120px rgba(200,255,0,0.2);
+      text-shadow: 0 0 40px rgba(200,255,0,0.9), 0 0 100px rgba(200,255,0,0.6), 0 0 200px rgba(200,255,0,0.3);
     }
 
     .hero-tag {
@@ -307,7 +311,7 @@
   <!-- HERO -->
   <section class="hero">
     <div class="hero-logo">
-      <span class="logo-gr">GR</span><span class="logo-33">33</span><span class="logo-mo">Mo</span><span class="logo-bb">BB</span>
+      <span class="logo-gr">GR</span><span class="logo-33">33</span><span class="logo-k">K</span><span class="logo-mo">Mo</span><span class="logo-bb">BB</span>
     </div>
     <p class="hero-tag">We don't build businesses. <strong>We build machines that build businesses.</strong></p>
     <div class="scroll-hint">Scroll</div>
@@ -450,30 +454,29 @@
   <section style="padding:100px 40px;max-width:1200px;margin:0 auto;">
     <div class="section-label" style="margin-bottom:48px;">// Greek Mobb Media</div>
 
-    <!-- Featured videos row -->
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
-      <div class="video-card" style="position:relative;overflow:hidden;background:#0a0a0a;border:1px solid rgba(255,255,255,0.06);">
-        <video src="/videos/gr33k1.mp4" muted playsinline loop preload="none" style="width:100%;display:block;aspect-ratio:9/16;object-fit:cover;"></video>
+    <!-- SLIDESHOW -->
+    <div id="showcase" style="position:relative;overflow:hidden;background:#000;border:1px solid rgba(255,255,255,0.06);margin-bottom:16px;">
+      <div id="slides" style="display:flex;transition:transform 0.6s ease;will-change:transform;">
+        <img src="/images/phone-img1.jpg"     class="slide" style="min-width:100%;aspect-ratio:16/9;object-fit:cover;display:block;">
+        <img src="/images/phone-img2.jpg"     class="slide" style="min-width:100%;aspect-ratio:16/9;object-fit:cover;display:block;">
+        <img src="/images/phone-img3.jpg"     class="slide" style="min-width:100%;aspect-ratio:16/9;object-fit:cover;display:block;">
+        <img src="/images/phone-img4.jpg"     class="slide" style="min-width:100%;aspect-ratio:16/9;object-fit:cover;display:block;">
+        <img src="/images/gr33k-cyberpunk2.png" class="slide" style="min-width:100%;aspect-ratio:16/9;object-fit:cover;display:block;">
+        <img src="/images/gr33k-gaming.png"   class="slide" style="min-width:100%;aspect-ratio:16/9;object-fit:cover;display:block;background:#111;">
       </div>
-      <div class="video-card" style="position:relative;overflow:hidden;background:#0a0a0a;border:1px solid rgba(255,255,255,0.06);">
-        <video src="/videos/gr33k2.mp4" muted playsinline loop preload="none" style="width:100%;display:block;aspect-ratio:9/16;object-fit:cover;"></video>
-      </div>
+      <!-- dots -->
+      <div id="dots" style="position:absolute;bottom:14px;left:50%;transform:translateX(-50%);display:flex;gap:6px;"></div>
+      <!-- arrows -->
+      <button onclick="slideBy(-1)" style="position:absolute;left:16px;top:50%;transform:translateY(-50%);background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.15);color:#fff;width:36px;height:36px;cursor:pointer;font-size:16px;">‹</button>
+      <button onclick="slideBy(1)"  style="position:absolute;right:16px;top:50%;transform:translateY(-50%);background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.15);color:#fff;width:36px;height:36px;cursor:pointer;font-size:16px;">›</button>
     </div>
 
-    <!-- Image grid -->
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:16px;">
-      <img src="/images/phone-img1.jpg" alt="" style="width:100%;aspect-ratio:1/1;object-fit:cover;display:block;border:1px solid rgba(255,255,255,0.06);">
-      <img src="/images/gr33k-cyberpunk2.png" alt="" style="width:100%;aspect-ratio:1/1;object-fit:cover;display:block;border:1px solid rgba(255,255,255,0.06);">
-      <img src="/images/phone-img2.jpg" alt="" style="width:100%;aspect-ratio:1/1;object-fit:cover;display:block;border:1px solid rgba(255,255,255,0.06);">
-    </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
-      <img src="/images/phone-img3.jpg" alt="" style="width:100%;aspect-ratio:16/9;object-fit:cover;display:block;border:1px solid rgba(255,255,255,0.06);">
-      <img src="/images/phone-img4.jpg" alt="" style="width:100%;aspect-ratio:16/9;object-fit:cover;display:block;border:1px solid rgba(255,255,255,0.06);">
+    <!-- Videos side by side -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:40px;">
+      <video src="/videos/gr33k1.mp4" muted playsinline loop autoplay style="width:100%;display:block;aspect-ratio:9/16;object-fit:cover;border:1px solid rgba(255,255,255,0.06);background:#0a0a0a;"></video>
+      <video src="/videos/gr33k2.mp4" muted playsinline loop autoplay style="width:100%;display:block;aspect-ratio:9/16;object-fit:cover;border:1px solid rgba(255,255,255,0.06);background:#0a0a0a;"></video>
     </div>
 
-    <div style="margin-top:40px;text-align:center;">
-      <a class="vs-cta" href="https://iseeu.onrender.com/nexus" style="font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:var(--green);border:1px solid rgba(200,255,0,0.3);padding:14px 40px;text-decoration:none;display:inline-block;transition:all .2s;">See Everything We've Built →</a>
-    </div>
   </section>
 
   <div class="divider"></div>
@@ -491,15 +494,39 @@
   <div class="divider"></div>
 
   <!-- FOOTER -->
-  <footer>
+  <footer style="flex-direction:column;align-items:center;text-align:center;gap:16px;padding:40px;">
     <div class="f-logo">GR33KMoBB</div>
     <div class="f-copy">© 2024 GR33KMoBB Media. All rights reserved.</div>
-    <div style="font-size:12px;color:rgba(255,255,255,0.5);text-align:right;line-height:1.6">
-      <div style="color:#fff;font-weight:600;letter-spacing:0.04em">Damion Roy</div>
-      <div style="font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.3)">Founder &amp; Developer</div>
-      <a href="mailto:gr33kmobb619@gmail.com" style="font-size:10px;color:rgba(200,255,0,0.5);text-decoration:none;letter-spacing:0.04em">gr33kmobb619@gmail.com</a>
+    <div style="line-height:1.8">
+      <div style="color:#fff;font-size:14px;font-weight:600;letter-spacing:0.06em;">Damion Roy</div>
+      <div style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:rgba(255,255,255,0.3);">Founder &amp; Developer</div>
+      <a href="mailto:gr33kmobb619@gmail.com" style="font-size:11px;color:rgba(200,255,0,0.6);text-decoration:none;letter-spacing:0.04em;">gr33kmobb619@gmail.com</a>
     </div>
   </footer>
+
+  <!-- SLIDESHOW -->
+  <script>
+    let cur = 0;
+    const slides = document.querySelectorAll('.slide');
+    const track  = document.getElementById('slides');
+    const dotsEl = document.getElementById('dots');
+    const total  = slides.length;
+
+    slides.forEach((_, i) => {
+      const d = document.createElement('div');
+      d.style.cssText = `width:8px;height:8px;border-radius:50%;background:${i===0?'#c8ff00':'rgba(255,255,255,0.2)'};cursor:pointer;transition:background .3s`;
+      d.onclick = () => goTo(i);
+      dotsEl.appendChild(d);
+    });
+
+    function goTo(n) {
+      cur = (n + total) % total;
+      track.style.transform = `translateX(-${cur * 100}%)`;
+      dotsEl.querySelectorAll('div').forEach((d, i) => d.style.background = i === cur ? '#c8ff00' : 'rgba(255,255,255,0.2)');
+    }
+    function slideBy(dir) { goTo(cur + dir); }
+    setInterval(() => goTo(cur + 1), 4000);
+  </script>
 
   <!-- VIDEO AUTOPLAY ON SCROLL -->
   <script>
