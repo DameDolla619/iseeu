@@ -236,6 +236,17 @@
     }
     .btn-chat:hover { background: #d4ff33; transform: translateY(-2px); }
 
+    /* ── SOUND BUTTON ── */
+    .vid-sound-btn {
+      position: absolute; bottom: 12px; right: 12px;
+      background: rgba(0,0,0,0.75); color: #fff;
+      border: 1px solid rgba(255,255,255,0.25);
+      font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase;
+      padding: 7px 14px; cursor: pointer; z-index: 10;
+      transition: all .2s;
+    }
+    .vid-sound-btn:hover { background: rgba(0,0,0,0.9); border-color: var(--green); color: var(--green); }
+
     /* ── VIDEO SPOTLIGHT ── */
     .video-spotlight {
       padding: 100px 40px;
@@ -428,8 +439,9 @@
 
   <!-- AD SPOTLIGHT 1 — AI Front Desk -->
   <section class="video-spotlight video-card">
-    <div class="vs-video">
+    <div class="vs-video" style="position:relative;">
       <video src="/videos/ad2.mp4" muted playsinline loop preload="none"></video>
+      <button class="vid-sound-btn" onclick="toggleSound(this)">🔇 Tap for Sound</button>
     </div>
     <div class="vs-text">
       <div class="vs-label">// Product Spotlight</div>
@@ -457,12 +469,11 @@
     <!-- SLIDESHOW -->
     <div id="showcase" style="position:relative;overflow:hidden;background:#000;border:1px solid rgba(255,255,255,0.06);margin-bottom:16px;">
       <div id="slides" style="display:flex;transition:transform 0.6s ease;will-change:transform;">
-        <img src="/images/phone-img1.jpg"     class="slide" style="min-width:100%;aspect-ratio:16/9;object-fit:cover;display:block;">
-        <img src="/images/phone-img2.jpg"     class="slide" style="min-width:100%;aspect-ratio:16/9;object-fit:cover;display:block;">
-        <img src="/images/phone-img3.jpg"     class="slide" style="min-width:100%;aspect-ratio:16/9;object-fit:cover;display:block;">
-        <img src="/images/phone-img4.jpg"     class="slide" style="min-width:100%;aspect-ratio:16/9;object-fit:cover;display:block;">
-        <img src="/images/gr33k-cyberpunk2.png" class="slide" style="min-width:100%;aspect-ratio:16/9;object-fit:cover;display:block;">
-        <img src="/images/gr33k-gaming.png"   class="slide" style="min-width:100%;aspect-ratio:16/9;object-fit:cover;display:block;background:#111;">
+        <img src="/images/gr33k-robots-gold.png"    class="slide" style="min-width:100%;aspect-ratio:16/9;object-fit:cover;display:block;background:#111;">
+        <img src="/images/gr33k-gaming-warrior.png" class="slide" style="min-width:100%;aspect-ratio:16/9;object-fit:cover;display:block;background:#111;">
+        <img src="/images/thumbai-logo.png"          class="slide" style="min-width:100%;aspect-ratio:16/9;object-fit:contain;display:block;background:#060d1f;">
+        <img src="/images/inside-edge.png"           class="slide" style="min-width:100%;aspect-ratio:16/9;object-fit:contain;display:block;background:#000;">
+        <img src="/images/gadget-graveyard.png"      class="slide" style="min-width:100%;aspect-ratio:16/9;object-fit:cover;display:block;background:#0a1a0a;">
       </div>
       <!-- dots -->
       <div id="dots" style="position:absolute;bottom:14px;left:50%;transform:translateX(-50%);display:flex;gap:6px;"></div>
@@ -471,12 +482,28 @@
       <button onclick="slideBy(1)"  style="position:absolute;right:16px;top:50%;transform:translateY(-50%);background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.15);color:#fff;width:36px;height:36px;cursor:pointer;font-size:16px;">›</button>
     </div>
 
-    <!-- Videos side by side -->
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:40px;">
+    <!-- Video 1 -->
+    <div style="position:relative;max-width:420px;margin:0 auto 40px;">
       <video src="/videos/gr33k1.mp4" muted playsinline loop autoplay style="width:100%;display:block;aspect-ratio:9/16;object-fit:cover;border:1px solid rgba(255,255,255,0.06);background:#0a0a0a;"></video>
-      <video src="/videos/gr33k2.mp4" muted playsinline loop autoplay style="width:100%;display:block;aspect-ratio:9/16;object-fit:cover;border:1px solid rgba(255,255,255,0.06);background:#0a0a0a;"></video>
+      <button class="vid-sound-btn" onclick="toggleSound(this)">🔇 Tap for Sound</button>
     </div>
 
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- GR33KMOBB AD SPOTLIGHT 2 -->
+  <section class="video-spotlight flip video-card">
+    <div class="vs-video" style="position:relative;">
+      <video src="/videos/gr33k2.mp4" muted playsinline loop autoplay style="width:100%;display:block;aspect-ratio:9/16;object-fit:cover;"></video>
+      <button class="vid-sound-btn" onclick="toggleSound(this)">🔇 Tap for Sound</button>
+    </div>
+    <div class="vs-text">
+      <div class="vs-label">// Parent Company</div>
+      <div class="vs-title">GR33K<br><span class="vs-accent">MoBB</span><br>MEDIA</div>
+      <p class="vs-desc">The company behind every product you see here. We build AI-powered businesses, tools, and brands from scratch — and we're just getting started.</p>
+      <a class="vs-cta" href="#" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;">Back to Top ↑</a>
+    </div>
   </section>
 
   <div class="divider"></div>
@@ -539,6 +566,17 @@
       });
     }, { threshold: 0.4 });
     document.querySelectorAll('.video-spotlight').forEach(c => observer.observe(c));
+  </script>
+
+  <!-- SOUND TOGGLE -->
+  <script>
+    function toggleSound(btn) {
+      const wrap = btn.closest('[style*="position:relative"], .vs-video');
+      const video = wrap ? wrap.querySelector('video') : btn.previousElementSibling;
+      if (!video) return;
+      video.muted = !video.muted;
+      btn.textContent = video.muted ? '🔇 Tap for Sound' : '🔊 Sound On';
+    }
   </script>
 
   <!-- CHAT WIDGET -->
