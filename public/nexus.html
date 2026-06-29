@@ -130,13 +130,40 @@
     }
     .pr-desc {
       font-size: 12px; color: rgba(255,255,255,0.3);
-      font-weight: 400; margin-top: 2px;
+      font-weight: 400; margin-top: 4px; max-width: 520px; line-height: 1.55;
     }
-    .pr-right { display: flex; align-items: center; gap: 20px; flex-shrink: 0; }
+    .pr-tags {
+      display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap;
+    }
+    .pr-tag {
+      font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase;
+      padding: 3px 8px; border: 1px solid rgba(255,255,255,0.1);
+      color: rgba(255,255,255,0.3);
+    }
+    .pr-tag.accent { border-color: rgba(200,255,0,0.3); color: var(--green); }
+    .pr-right { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; flex-shrink: 0; }
+    .pr-price {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 22px; color: var(--green);
+      letter-spacing: 0.03em;
+    }
+    .pr-price-sub {
+      font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase;
+      color: rgba(255,255,255,0.2); margin-top: -4px;
+    }
     .pr-status {
       font-size: 10px; letter-spacing: 0.14em;
       text-transform: uppercase;
       color: var(--green); opacity: 0.7;
+    }
+    .pr-try {
+      font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase;
+      color: rgba(255,255,255,0.25); padding: 5px 12px;
+      border: 1px solid rgba(255,255,255,0.1);
+      transition: all .2s;
+    }
+    .product-row:hover .pr-try {
+      border-color: var(--green); color: var(--green);
     }
     .pr-arrow {
       font-size: 20px; color: rgba(255,255,255,0.2);
@@ -250,12 +277,19 @@
           <div class="pr-num">01</div>
           <div>
             <div class="pr-name">IseeU</div>
-            <div class="pr-desc">Deep People Search &amp; Identity Verification · 3,000+ platforms</div>
+            <div class="pr-desc">The most powerful people search engine we've built. Run a deep scan across 3,400+ platforms — social media, public records, emails, usernames, and more — in seconds. Built for investigators, businesses, and anyone who needs real answers.</div>
+            <div class="pr-tags">
+              <span class="pr-tag accent">Try Free</span>
+              <span class="pr-tag">People Search</span>
+              <span class="pr-tag">3,400+ Sources</span>
+              <span class="pr-tag">Identity Verification</span>
+            </div>
           </div>
         </div>
         <div class="pr-right">
-          <div class="pr-status">Live</div>
-          <div class="pr-arrow">→</div>
+          <div class="pr-price">FREE</div>
+          <div class="pr-price-sub">Try it now</div>
+          <div class="pr-try">Launch →</div>
         </div>
       </a>
 
@@ -264,12 +298,19 @@
           <div class="pr-num">02</div>
           <div>
             <div class="pr-name">AI Front Desk</div>
-            <div class="pr-desc">AI Receptionist for Local Businesses · 24/7 Inbound</div>
+            <div class="pr-desc">Never miss a lead again. This AI receptionist answers every call, chat, and inquiry for your business — 24/7, no lunch breaks, no sick days. Captures leads, books appointments, and handles FAQs automatically. Built for salons, clinics, contractors, and local businesses.</div>
+            <div class="pr-tags">
+              <span class="pr-tag accent">Available Now</span>
+              <span class="pr-tag">24/7 AI Receptionist</span>
+              <span class="pr-tag">Lead Capture</span>
+              <span class="pr-tag">Local Business</span>
+            </div>
           </div>
         </div>
         <div class="pr-right">
-          <div class="pr-status">Live</div>
-          <div class="pr-arrow">→</div>
+          <div class="pr-price">$97<span style="font-size:14px">/mo</span></div>
+          <div class="pr-price-sub">Starting at</div>
+          <div class="pr-try">Try Demo →</div>
         </div>
       </a>
 
@@ -278,12 +319,19 @@
           <div class="pr-num">03</div>
           <div>
             <div class="pr-name">ThumbAI</div>
-            <div class="pr-desc">AI YouTube Thumbnail Generator · High-Converting Designs</div>
+            <div class="pr-desc">Stop guessing what thumbnail gets the click. ThumbAI generates high-converting YouTube thumbnails using AI — trained on what actually performs. Upload your idea, get a professional result. No designer needed, no hours wasted.</div>
+            <div class="pr-tags">
+              <span class="pr-tag accent">Try Free</span>
+              <span class="pr-tag">YouTube Growth</span>
+              <span class="pr-tag">AI Design</span>
+              <span class="pr-tag">Creators</span>
+            </div>
           </div>
         </div>
         <div class="pr-right">
-          <div class="pr-status">Live</div>
-          <div class="pr-arrow">→</div>
+          <div class="pr-price">FREE</div>
+          <div class="pr-price-sub">Try it now</div>
+          <div class="pr-try">Launch →</div>
         </div>
       </a>
 
@@ -292,25 +340,32 @@
           <div class="pr-num">04</div>
           <div>
             <div class="pr-name">Contact Tracker</div>
-            <div class="pr-desc">Real-Time Visitor &amp; Contact Intelligence</div>
+            <div class="pr-desc">Know exactly who's walking through your door — digitally and physically. Track contacts, visits, and interactions in real time. Build your database automatically. Know your numbers, follow up faster, close more deals.</div>
+            <div class="pr-tags">
+              <span class="pr-tag accent">Available Now</span>
+              <span class="pr-tag">CRM</span>
+              <span class="pr-tag">Visit Tracking</span>
+              <span class="pr-tag">Business Intelligence</span>
+            </div>
           </div>
         </div>
         <div class="pr-right">
-          <div class="pr-status">Live</div>
-          <div class="pr-arrow">→</div>
+          <div class="pr-price">$49<span style="font-size:14px">/mo</span></div>
+          <div class="pr-price-sub">Starting at</div>
+          <div class="pr-try">Try Demo →</div>
         </div>
       </a>
 
-      <div class="product-row" style="cursor:default;opacity:0.3">
+      <div class="product-row" style="cursor:default;opacity:0.25">
         <div class="pr-left">
           <div class="pr-num">05</div>
           <div>
-            <div class="pr-name">More Loading</div>
-            <div class="pr-desc">New products drop continuously</div>
+            <div class="pr-name">More Dropping</div>
+            <div class="pr-desc">New products launch continuously. Follow to stay first in line.</div>
           </div>
         </div>
         <div class="pr-right">
-          <div class="pr-status" style="color:rgba(255,255,255,0.3)">Soon</div>
+          <div class="pr-status" style="color:rgba(255,255,255,0.25)">Coming Soon</div>
         </div>
       </div>
 
