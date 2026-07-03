@@ -12,8 +12,6 @@
   "author": "GR33KMoBB.media",
   "license": "ISC",
   "dependencies": {
-    "dotenv": "^17.4.2",
-    "express": "^5.2.1",
-    "pg": "^8.22.0"
+    "express": "^5.2.1"
   }
 }
