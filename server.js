@@ -1,3 +1,4 @@
+require('dotenv').config({ path: require('path').join(__dirname, '.env'), quiet: true });
 const express = require('express');
 const https = require('https');
 const http = require('http');
@@ -8,6 +9,7 @@ const { execFile } = require('child_process');
 
 const { EMAIL_CHECKERS, checkEmail, detectEmailProvider } = require('./email-checker');
 const { BG_CHECKS, runBackgroundCheck } = require('./background-check');
+const { recordVisit, getVisitCount } = require('./visits-db');
 
 const PYTHON_PATH = process.env.PYTHON_PATH || 'C:\\Users\\Gr33k\\AppData\\Local\\Programs\\Python\\Python314\\python.exe';
 const OSINT_SCRIPT = path.join(__dirname, 'osint-runner.py');
@@ -594,7 +596,20 @@ app.get('/api/scan', async (req, res) => {
 });
 
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'public', 'index.html')));
-app.get('/nexus', (req, res) => res.sendFile(path.join(__dirname, 'public', 'nexus.html')));
+app.get('/nexus', (req, res) => {
+  recordVisit('nexus').catch((err) => console.error('recordVisit failed:', err.message));
+  res.sendFile(path.join(__dirname, 'public', 'nexus.html'));
+});
+
+app.get('/api/visit-count', async (req, res) => {
+  try {
+    const page = req.query.page || 'nexus';
+    const count = await getVisitCount(page);
+    res.json({ page, count });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 app.get('/gr33kmobb', (req, res) => res.redirect('/nexus'));
 
 // ── GR33KMoBB CHAT RELAY ─────────────────────────────────────────────────────
